@@ -27,28 +27,82 @@ import { t } from "@src/i18n/config.i18n"
 			</p>
 			<div class="text-center md:text-left">
 				<a
-					href="#"
+					href="#eventos"
 					class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 text-sm md:text-base font-medium"
 					>{t("page.home.viewEvents")}</a
 				>
 			</div>
 		</main>
-		<aside class="w-full lg:w-1/3 bg-white rounded-lg shadow-lg p-4 md:p-6 order-first lg:order-last">
+		
+		<aside class="w-full lg:w-1/3 bg-white rounded-lg shadow-lg p-4 md:p-6 lg:order-last" id="eventos">
 			<h3 class="text-lg md:text-xl font-bold mb-4 text-center lg:text-left">{t("page.home.upcomingEvents")}</h3>
-			<ul class="space-y-3">
-				<li class="flex items-center space-x-2 text-sm md:text-base p-2 hover:bg-gray-50 rounded">
-					<span class="text-xl">🎤</span>
-					<span>Concierto en el parque - 20:00</span>
-				</li>
-				<li class="flex items-center space-x-2 text-sm md:text-base p-2 hover:bg-gray-50 rounded">
-					<span class="text-xl">🎬</span>
-					<span>Cine al aire libre - 21:30</span>
-				</li>
-				<li class="flex items-center space-x-2 text-sm md:text-base p-2 hover:bg-gray-50 rounded">
-					<span class="text-xl">🎨</span>
-					<span>Taller de pintura - 18:00</span>
-				</li>
-			</ul>
+			<div class="space-y-4">
+				<!-- Evento 1 -->
+				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+					<div class="flex items-start space-x-3 mb-2">
+						<span class="text-2xl">🎤</span>
+						<div class="flex-1 min-w-0">
+							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Concierto en el Parque</h4>
+							<p class="text-xs md:text-sm text-blue-600 font-medium">Por Municipalidad de Lima</p>
+						</div>
+					</div>
+					<div class="ml-11 space-y-1">
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📅</span> 15-07-2025 a las 20:00
+						</p>
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📍</span> Parque de la Exposición
+						</p>
+						<p class="text-xs md:text-sm text-gray-700 mt-2">
+							Concierto gratuito de música folclórica peruana con artistas locales.
+						</p>
+					</div>
+				</div>
+
+				<!-- Evento 2 -->
+				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+					<div class="flex items-start space-x-3 mb-2">
+						<span class="text-2xl">🎬</span>
+						<div class="flex-1 min-w-0">
+							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Cine al Aire Libre</h4>
+							<p class="text-xs md:text-sm text-blue-600 font-medium">Por CineClub Barranco</p>
+						</div>
+					</div>
+					<div class="ml-11 space-y-1">
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📅</span> 16-07-2025 a las 21:30
+						</p>
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📍</span> Plaza San Francisco, Barranco
+						</p>
+						<p class="text-xs md:text-sm text-gray-700 mt-2">
+							Proyección de películas clásicas bajo las estrellas. Entrada libre.
+						</p>
+					</div>
+				</div>
+
+				<!-- Evento 3 -->
+				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+					<div class="flex items-start space-x-3 mb-2">
+						<span class="text-2xl">🎨</span>
+						<div class="flex-1 min-w-0">
+							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Taller de Pintura</h4>
+							<p class="text-xs md:text-sm text-blue-600 font-medium">Por Arte & Vida Studio</p>
+						</div>
+					</div>
+					<div class="ml-11 space-y-1">
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📅</span> 17-07-2025 a las 18:00
+						</p>
+						<p class="text-xs md:text-sm text-gray-600">
+							<span class="font-medium">📍</span> Centro Cultural Ricardo Palma
+						</p>
+						<p class="text-xs md:text-sm text-gray-700 mt-2">
+							Aprende técnicas de acuarela para principiantes. Materiales incluidos.
+						</p>
+					</div>
+				</div>
+			</div>
 		</aside>
 	</div>
 
