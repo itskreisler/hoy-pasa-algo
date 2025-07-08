@@ -1,48 +1,88 @@
-# Astro Starter Kit: Basics
+# Plantilla Proyecto Final (actualizada)
 
-```sh
-npm create astro@latest -- --template basics
-```
+TÍTULO
+[NombreApp] – Eventos locales en tiempo real
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+1. PLANTEAMIENTO DEL PROBLEMA
+En muchas ocasiones, las promociones y actividades de negocios locales solo son visibles para quienes pasan frente al establecimiento. Esto genera una desconexión entre usuarios y oportunidades, haciendo que se pierdan descuentos, cambios de horarios o eventos importantes por falta de difusión digital inmediata.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+2. INTRODUCCIÓN
+[NombreApp] es una plataforma web desarrollada como un MVP (Producto Mínimo Viable) para permitir la publicación y visualización de eventos en tiempo real, organizados por categorías y fechas. Mediante una experiencia centrada en el usuario, permite a los negocios aumentar su visibilidad y a los usuarios descubrir actividades relevantes sin necesidad de desplazarse innecesariamente.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+3. OBJETIVOS
+3.1 OBJETIVO GENERAL
+Desarrollar una aplicación web moderna que permita a personas y negocios publicar y consultar eventos de manera sencilla, ordenados por fecha y categoría.
 
-## 🚀 Project Structure
+3.2 OBJETIVOS ESPECÍFICOS
+Crear una interfaz amigable con menú superior e inferior.
 
-Inside of your Astro project, you'll see the following folders and files:
+Implementar filtros por categoría (comida, servicios, deportes, etc.) y por fecha (hoy, mañana, esta semana, próximos).
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Utilizar tarjetas para mostrar eventos con info clave y botones de interacción (like/favorito).
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Integrar un sistema de publicación de eventos rápido y accesible.
 
-## 🧞 Commands
+Diseñar un MVP funcional usando Astro con React y Zustand.
 
-All commands are run from the root of the project, from a terminal:
+4. METODOLOGÍA
+4.1 TECNOLOGÍA UTILIZADA
+Frontend:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Astro (estructura general del sitio, SSR)
 
-## 👀 Want to learn more?
+React (componentes interactivos)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+TailwindCSS (estilos rápidos y responsivos)
+
+Estado global:
+
+Zustand (gestión de estado para filtros, favoritos, sesión, etc.)
+
+Backend (opcional o provisional):
+
+Firebase (auth y base de datos) o backend en Node/Express para eventos y usuarios.
+
+4.2 DISEÑOS (MOCKUPS)
+Diseños creados en Figma para:
+
+Página de inicio con buscador y filtros
+
+Tarjetas de evento con detalles clave
+
+Página de perfil
+
+Formulario de creación de eventos
+
+Menú de navegación inferior (Inicio, Crear, Perfil)
+
+4.3 ESTRUCTURA DEL SOFTWARE
+Astro: rutas, layout base, integración con componentes React.
+
+React: componentes como EventoCard, FiltroCategorias, FiltroFechas, Navbar, BottomMenu.
+
+Zustand: manejo del estado global (categoría activa, fecha activa, favoritos).
+
+TailwindCSS: diseño responsivo, utilidades para espaciado, colores, layouts.
+
+5. RESULTADOS OBTENIDOS
+🖼 Interfaz responsiva con filtros visibles desde el inicio.
+
+🖼 Cards de eventos con info rápida: imagen, hora, ubicación y favoritos.
+
+🖼 Sistema de creación funcional con validación básica.
+
+🖼 Menú inferior que guía la navegación básica del MVP.
+
+🖼 Estado global funcional con Zustand, manteniendo filtros activos entre rutas.
+
+6. CONCLUSIONES
+[NombreApp] logró demostrar que es posible crear un MVP moderno, funcional y escalable para resolver la falta de visibilidad de eventos locales. Se validó el uso conjunto de Astro + React + Zustand + Tailwind como stack eficiente para proyectos web centrados en velocidad, estructura clara y usabilidad.
+
+7. BIBLIOGRAFÍA
+Astro.build/docs
+
+React.js Docs
+
+TailwindCSS Docs
+
+Zustand Docs
