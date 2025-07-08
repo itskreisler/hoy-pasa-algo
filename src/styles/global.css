@@ -1,5 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-* {
-    color-scheme: dark;
+html,
+body {
+  color-scheme: dark;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
