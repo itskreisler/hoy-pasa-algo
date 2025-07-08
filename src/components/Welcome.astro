@@ -1,28 +1,209 @@
 ---
-import { t } from "@src/i18n/config.i18n"
-
-
+import { t } from "@src/i18n/config.i18n";
+const placeholder = "/images/image.png";
 ---
+
+<style>
+	.carousel {
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.carousel-container {
+		display: flex;
+		animation: carousel 30s infinite linear;
+	}
+
+	.carousel-container:hover {
+		animation-play-state: paused;
+	}
+
+	.carousel-item {
+		flex-shrink: 0;
+	}
+
+	@keyframes carousel {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-300%);
+		}
+	}
+
+	/* Estilos para PC */
+	@media (min-width: 1024px) {
+		.carousel-item {
+			width: 33.33%;
+		}
+
+		@keyframes carousel {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(-100%);
+			}
+		}
+	}
+
+	/* Estilos para tableta */
+	@media (min-width: 768px) and (max-width: 1023px) {
+		.carousel-item {
+			width: 50%;
+		}
+
+		@keyframes carousel {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(-150%);
+			}
+		}
+	}
+
+	/* Estilos para móvil */
+	@media (max-width: 767px) {
+		.carousel-item {
+			width: 100%;
+		}
+
+		@keyframes carousel {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(-300%);
+			}
+		}
+	}
+</style>
+
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 	<header class="bg-blue-600 text-white p-4 md:p-6 shadow">
-		<div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-			<h1 class="text-xl md:text-2xl font-bold text-center sm:text-left">{t("title")}</h1>
+		<div
+			class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4"
+		>
+			<h1 class="text-xl md:text-2xl font-bold text-center sm:text-left">
+				{t("title")}
+			</h1>
 			<nav>
-				<ul class="flex flex-wrap justify-center space-x-4 md:space-x-6">
-					<li><a href="#" class="hover:underline text-sm md:text-base">{t("nav.home")}</a></li>
-					<li><a href="#" class="hover:underline text-sm md:text-base">{t("nav.events")}</a></li>
-					<li><a href="#" class="hover:underline text-sm md:text-base">{t("nav.contact")}</a></li>
+				<ul
+					class="flex flex-wrap justify-center space-x-4 md:space-x-6"
+				>
+					<li>
+						<a href="#" class="hover:underline text-sm md:text-base"
+							>{t("nav.home")}</a
+						>
+					</li>
+					<li>
+						<a href="#" class="hover:underline text-sm md:text-base"
+							>{t("nav.events")}</a
+						>
+					</li>
+					<li>
+						<a href="#" class="hover:underline text-sm md:text-base"
+							>{t("nav.contact")}</a
+						>
+					</li>
 				</ul>
 			</nav>
 		</div>
 	</header>
 
-	<div class="container mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 md:p-6 lg:py-10">
+	<!-- Carrusel infinito -->
+	<section class="bg-white py-6 md:py-8 border-b border-gray-200">
+		<div class="container mx-auto px-4 mb-4">
+			<h2 class="text-xl md:text-2xl font-bold text-center text-gray-900">
+				Eventos Destacados de la Semana
+			</h2>
+			<p class="text-sm md:text-base text-gray-600 text-center mt-2">
+				Descubre lo mejor que está pasando en tu ciudad
+			</p>
+		</div>
+
+		<!-- Contenedor del carrusel -->
+		<div class="carousel mx-auto">
+			<div class="carousel-container" id="carousel">
+				<div class="carousel-item relative px-2">
+					<img
+						src={placeholder}
+						alt="Food Truck"
+						class="w-full aspect-video object-cover rounded-lg"
+					/>
+					<div
+						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
+					>
+						<span
+							class="text-white font-bold text-lg drop-shadow-lg"
+							>🍕 Food Truck</span
+						>
+					</div>
+				</div>
+
+				<div class="carousel-item relative px-2">
+					<img
+						src={placeholder}
+						alt="Festival de Arte"
+						class="w-full aspect-video object-cover rounded-lg"
+					/>
+					<div
+						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
+					>
+						<span
+							class="text-white font-bold text-lg drop-shadow-lg"
+							>🎪 Festival de Arte</span
+						>
+					</div>
+				</div>
+
+				<div class="carousel-item relative px-2">
+					<img
+						src={placeholder}
+						alt="Concierto Rock"
+						class="w-full aspect-video object-cover rounded-lg"
+					/>
+					<div
+						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
+					>
+						<span
+							class="text-white font-bold text-lg drop-shadow-lg"
+							>🎵 Concierto Rock</span
+						>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		// Esperar a que el DOM esté cargado
+		document.addEventListener('DOMContentLoaded', function() {
+			const carouselContainer = document.querySelector('#carousel');
+			if (!carouselContainer) return;
+			const items = carouselContainer.querySelectorAll('.carousel-item');
+
+			// Clonar las imágenes para crear un bucle infinito
+			items.forEach(item => {
+				const clonedItem = item.cloneNode(true);
+				carouselContainer.appendChild(clonedItem);
+			});
+		});
+	</script>
+
+	<div
+		class="container mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 md:p-6 lg:py-10"
+	>
 		<main class="flex-1">
-			<h2 class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left">
+			<h2
+				class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left"
+			>
 				{t("page.home.title")}
 			</h2>
-			<p class="mb-6 text-sm md:text-base leading-relaxed text-center md:text-left">
+			<p
+				class="mb-6 text-sm md:text-base leading-relaxed text-center md:text-left"
+			>
 				{t("page.home.description")}
 			</p>
 			<div class="text-center md:text-left">
@@ -33,72 +214,117 @@ import { t } from "@src/i18n/config.i18n"
 				>
 			</div>
 		</main>
-		
-		<aside class="w-full lg:w-1/3 bg-white rounded-lg shadow-lg p-4 md:p-6 lg:order-last" id="eventos">
-			<h3 class="text-lg md:text-xl font-bold mb-4 text-center lg:text-left">{t("page.home.upcomingEvents")}</h3>
+
+		<aside
+			class="w-full lg:w-1/3 bg-white rounded-lg shadow-lg p-4 md:p-6 lg:order-last"
+			id="eventos"
+		>
+			<h3
+				class="text-lg md:text-xl font-bold mb-4 text-center lg:text-left"
+			>
+				{t("page.home.upcomingEvents")}
+			</h3>
 			<div class="space-y-4">
 				<!-- Evento 1 -->
-				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+				<div
+					class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+				>
 					<div class="flex items-start space-x-3 mb-2">
 						<span class="text-2xl">🎤</span>
 						<div class="flex-1 min-w-0">
-							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Concierto en el Parque</h4>
-							<p class="text-xs md:text-sm text-blue-600 font-medium">Por Municipalidad de Lima</p>
+							<h4
+								class="font-semibold text-sm md:text-base text-gray-900 truncate"
+							>
+								Concierto en el Parque
+							</h4>
+							<p
+								class="text-xs md:text-sm text-blue-600 font-medium"
+							>
+								Por Municipalidad de Lima
+							</p>
 						</div>
 					</div>
 					<div class="ml-11 space-y-1">
 						<p class="text-xs md:text-sm text-gray-600">
-							<span class="font-medium">📅</span> 15-07-2025 a las 20:00
+							<span class="font-medium">📅</span> 15-07-2025 a las
+							20:00
 						</p>
 						<p class="text-xs md:text-sm text-gray-600">
 							<span class="font-medium">📍</span> Parque de la Exposición
 						</p>
 						<p class="text-xs md:text-sm text-gray-700 mt-2">
-							Concierto gratuito de música folclórica peruana con artistas locales.
+							Concierto gratuito de música folclórica peruana con
+							artistas locales.
 						</p>
 					</div>
 				</div>
 
 				<!-- Evento 2 -->
-				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+				<div
+					class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+				>
 					<div class="flex items-start space-x-3 mb-2">
 						<span class="text-2xl">🎬</span>
 						<div class="flex-1 min-w-0">
-							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Cine al Aire Libre</h4>
-							<p class="text-xs md:text-sm text-blue-600 font-medium">Por CineClub Barranco</p>
+							<h4
+								class="font-semibold text-sm md:text-base text-gray-900 truncate"
+							>
+								Cine al Aire Libre
+							</h4>
+							<p
+								class="text-xs md:text-sm text-blue-600 font-medium"
+							>
+								Por CineClub Barranco
+							</p>
 						</div>
 					</div>
 					<div class="ml-11 space-y-1">
 						<p class="text-xs md:text-sm text-gray-600">
-							<span class="font-medium">📅</span> 16-07-2025 a las 21:30
+							<span class="font-medium">📅</span> 16-07-2025 a las
+							21:30
 						</p>
 						<p class="text-xs md:text-sm text-gray-600">
-							<span class="font-medium">📍</span> Plaza San Francisco, Barranco
+							<span class="font-medium">📍</span> Plaza San Francisco,
+							Barranco
 						</p>
 						<p class="text-xs md:text-sm text-gray-700 mt-2">
-							Proyección de películas clásicas bajo las estrellas. Entrada libre.
+							Proyección de películas clásicas bajo las estrellas.
+							Entrada libre.
 						</p>
 					</div>
 				</div>
 
 				<!-- Evento 3 -->
-				<div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+				<div
+					class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+				>
 					<div class="flex items-start space-x-3 mb-2">
 						<span class="text-2xl">🎨</span>
 						<div class="flex-1 min-w-0">
-							<h4 class="font-semibold text-sm md:text-base text-gray-900 truncate">Taller de Pintura</h4>
-							<p class="text-xs md:text-sm text-blue-600 font-medium">Por Arte & Vida Studio</p>
+							<h4
+								class="font-semibold text-sm md:text-base text-gray-900 truncate"
+							>
+								Taller de Pintura
+							</h4>
+							<p
+								class="text-xs md:text-sm text-blue-600 font-medium"
+							>
+								Por Arte & Vida Studio
+							</p>
 						</div>
 					</div>
 					<div class="ml-11 space-y-1">
 						<p class="text-xs md:text-sm text-gray-600">
-							<span class="font-medium">📅</span> 17-07-2025 a las 18:00
+							<span class="font-medium">📅</span> 17-07-2025 a las
+							18:00
 						</p>
 						<p class="text-xs md:text-sm text-gray-600">
-							<span class="font-medium">📍</span> Centro Cultural Ricardo Palma
+							<span class="font-medium">📍</span> Centro Cultural Ricardo
+							Palma
 						</p>
 						<p class="text-xs md:text-sm text-gray-700 mt-2">
-							Aprende técnicas de acuarela para principiantes. Materiales incluidos.
+							Aprende técnicas de acuarela para principiantes.
+							Materiales incluidos.
 						</p>
 					</div>
 				</div>
@@ -109,17 +335,37 @@ import { t } from "@src/i18n/config.i18n"
 	<!-- Sección de Estadísticas -->
 	<section class="bg-blue-600 text-white py-8 md:py-12">
 		<div class="container mx-auto px-4 md:px-6">
-			<h3 class="text-2xl md:text-3xl font-bold text-center mb-8">Nuestras Estadísticas</h3>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+			<h3 class="text-2xl md:text-3xl font-bold text-center mb-8">
+				Nuestras Estadísticas
+			</h3>
+			<div
+				class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+			>
 				<div class="text-center bg-blue-700 rounded-lg p-6 md:p-8">
-					<div class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">1,247</div>
-					<div class="text-lg md:text-xl text-blue-100">Eventos Creados</div>
-					<div class="text-sm md:text-base text-blue-200 mt-2">Y creciendo cada día</div>
+					<div
+						class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2"
+					>
+						1,247
+					</div>
+					<div class="text-lg md:text-xl text-blue-100">
+						Eventos Creados
+					</div>
+					<div class="text-sm md:text-base text-blue-200 mt-2">
+						Y creciendo cada día
+					</div>
 				</div>
 				<div class="text-center bg-blue-700 rounded-lg p-6 md:p-8">
-					<div class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">8,392</div>
-					<div class="text-lg md:text-xl text-blue-100">Usuarios Registrados</div>
-					<div class="text-sm md:text-base text-blue-200 mt-2">Comunidad activa</div>
+					<div
+						class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2"
+					>
+						8,392
+					</div>
+					<div class="text-lg md:text-xl text-blue-100">
+						Usuarios Registrados
+					</div>
+					<div class="text-sm md:text-base text-blue-200 mt-2">
+						Comunidad activa
+					</div>
 				</div>
 			</div>
 		</div>
@@ -128,7 +374,8 @@ import { t } from "@src/i18n/config.i18n"
 	<footer class="bg-gray-800 text-gray-200 py-4 md:py-6">
 		<div class="container mx-auto text-center px-4">
 			<p class="text-sm md:text-base">
-				&copy; {new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos reservados.
+				&copy; {new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos
+				reservados.
 			</p>
 		</div>
 	</footer>
