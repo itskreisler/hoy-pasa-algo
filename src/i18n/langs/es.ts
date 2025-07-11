@@ -24,4 +24,4 @@ export default {
     footer: {
         copyright: `&copy; ${new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos reservados.`
     }
-}      
+}

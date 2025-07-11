@@ -1,84 +1,7 @@
 ---
+import Carousel from "@src/components/Carousel.astro";
 import { t } from "@src/i18n/config.i18n";
-const placeholder = "/images/image.png";
 ---
-
-<style>
-	.carousel {
-		overflow: hidden;
-		width: 100%;
-	}
-
-	.carousel-container {
-		display: flex;
-		animation: carousel 30s infinite linear;
-	}
-
-	.carousel-container:hover {
-		animation-play-state: paused;
-	}
-
-	.carousel-item {
-		flex-shrink: 0;
-	}
-
-	@keyframes carousel {
-		0% {
-			transform: translateX(0);
-		}
-		100% {
-			transform: translateX(-300%);
-		}
-	}
-
-	/* Estilos para PC */
-	@media (min-width: 1024px) {
-		.carousel-item {
-			width: 33.33%;
-		}
-
-		@keyframes carousel {
-			0% {
-				transform: translateX(0);
-			}
-			100% {
-				transform: translateX(-100%);
-			}
-		}
-	}
-
-	/* Estilos para tableta */
-	@media (min-width: 768px) and (max-width: 1023px) {
-		.carousel-item {
-			width: 50%;
-		}
-
-		@keyframes carousel {
-			0% {
-				transform: translateX(0);
-			}
-			100% {
-				transform: translateX(-150%);
-			}
-		}
-	}
-
-	/* Estilos para móvil */
-	@media (max-width: 767px) {
-		.carousel-item {
-			width: 100%;
-		}
-
-		@keyframes carousel {
-			0% {
-				transform: translateX(0);
-			}
-			100% {
-				transform: translateX(-300%);
-			}
-		}
-	}
-</style>
 
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 	<header class="bg-blue-600 text-white p-4 md:p-6 shadow">
@@ -112,7 +35,7 @@ const placeholder = "/images/image.png";
 		</div>
 	</header>
 
-	<!-- Carrusel infinito -->
+	
 	<section class="bg-white py-6 md:py-8 border-b border-gray-200">
 		<div class="container mx-auto px-4 mb-4">
 			<h2 class="text-xl md:text-2xl font-bold text-center text-gray-900">
@@ -122,75 +45,8 @@ const placeholder = "/images/image.png";
 				Descubre lo mejor que está pasando en tu ciudad
 			</p>
 		</div>
-
-		<!-- Contenedor del carrusel -->
-		<div class="carousel mx-auto">
-			<div class="carousel-container" id="carousel">
-				<div class="carousel-item relative px-2">
-					<img
-						src={placeholder}
-						alt="Food Truck"
-						class="w-full aspect-video object-cover rounded-lg"
-					/>
-					<div
-						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
-					>
-						<span
-							class="text-white font-bold text-lg drop-shadow-lg"
-							>🍕 Food Truck</span
-						>
-					</div>
-				</div>
-
-				<div class="carousel-item relative px-2">
-					<img
-						src={placeholder}
-						alt="Festival de Arte"
-						class="w-full aspect-video object-cover rounded-lg"
-					/>
-					<div
-						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
-					>
-						<span
-							class="text-white font-bold text-lg drop-shadow-lg"
-							>🎪 Festival de Arte</span
-						>
-					</div>
-				</div>
-
-				<div class="carousel-item relative px-2">
-					<img
-						src={placeholder}
-						alt="Concierto Rock"
-						class="w-full aspect-video object-cover rounded-lg"
-					/>
-					<div
-						class="absolute inset-0 bg-transparent bg-opacity-20 rounded-lg flex items-center justify-center mx-2"
-					>
-						<span
-							class="text-white font-bold text-lg drop-shadow-lg"
-							>🎵 Concierto Rock</span
-						>
-					</div>
-				</div>
-			</div>
-		</div>
+		<Carousel />
 	</section>
-
-	<script>
-		// Esperar a que el DOM esté cargado
-		document.addEventListener('DOMContentLoaded', function() {
-			const carouselContainer = document.querySelector('#carousel');
-			if (!carouselContainer) return;
-			const items = carouselContainer.querySelectorAll('.carousel-item');
-
-			// Clonar las imágenes para crear un bucle infinito
-			items.forEach(item => {
-				const clonedItem = item.cloneNode(true);
-				carouselContainer.appendChild(clonedItem);
-			});
-		});
-	</script>
 
 	<div
 		class="container mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 md:p-6 lg:py-10"
@@ -374,8 +230,7 @@ const placeholder = "/images/image.png";
 	<footer class="bg-gray-800 text-gray-200 py-4 md:py-6">
 		<div class="container mx-auto text-center px-4">
 			<p class="text-sm md:text-base">
-				&copy; {new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos
-				reservados.
+				{t("footer.copyright")}
 			</p>
 		</div>
 	</footer>
