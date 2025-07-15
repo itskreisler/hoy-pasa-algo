@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllEvents } from '../services/dbHelper';
+import { eventService } from '../services/eventService';
 import EventCard from './EventCard';
 import Input from './Input';
 import { explorePageText } from '../constants/explorePage';
@@ -21,7 +21,7 @@ const ExplorePage: React.FC = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const allEvents = await getAllEvents();
+      const allEvents = await eventService.getAllEvents();
       setEvents(allEvents);
       setFilteredEvents(allEvents);
     };

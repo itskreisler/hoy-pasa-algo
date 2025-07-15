@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { createEvent } from '../services/dbHelper';
+import { eventService } from '../services/eventService';
 import Button from './Button';
 import Input from './Input';
+import { formsText } from '../constants/forms';
 
 const CreateEventForm: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -13,14 +14,13 @@ const CreateEventForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newEvent = {
-      id: Date.now(),
       title,
       description,
       date,
       category,
       image,
     };
-    createEvent(newEvent);
+    eventService.createEvent(newEvent);
     window.location.href = '/explore';
   };
 
@@ -28,62 +28,62 @@ const CreateEventForm: React.FC = () => {
     <form onSubmit={handleSubmit} className="bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <div className="mb-4">
         <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="title">
-          Title
+          {formsText.titleLabel}
         </label>
         <Input
           type="text"
-          placeholder="Title"
+          placeholder={formsText.titlePlaceholder}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
       <div className="mb-4">
         <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="description">
-          Description
+          {formsText.descriptionLabel}
         </label>
         <Input
           type="text"
-          placeholder="Description"
+          placeholder={formsText.descriptionPlaceholder}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
       <div className="mb-4">
         <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="date">
-          Date
+          {formsText.dateLabel}
         </label>
         <Input
           type="date"
-          placeholder="Date"
+          placeholder={formsText.datePlaceholder}
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
       </div>
       <div className="mb-4">
         <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="category">
-          Category
+          {formsText.categoryLabel}
         </label>
         <Input
           type="text"
-          placeholder="Category"
+          placeholder={formsText.categoryPlaceholder}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         />
       </div>
       <div className="mb-6">
         <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="image">
-          Image URL
+          {formsText.imageLabel}
         </label>
         <Input
           type="text"
-          placeholder="Image URL"
+          placeholder={formsText.imagePlaceholder}
           value={image}
           onChange={(e) => setImage(e.target.value)}
         />
       </div>
       <div className="flex items-center justify-between">
         <Button type="submit">
-          Create Event
+          {formsText.createEventButton}
         </Button>
       </div>
     </form>
