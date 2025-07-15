@@ -1,4 +1,4 @@
-export default {
+export const es = {
     title: 'Hoy Pasa Algo',
     nav: {
         home: 'Inicio',
@@ -22,6 +22,7 @@ export default {
 
     },
     footer: {
-        copyright: `&copy; ${new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos reservados.`
+        copyright: `© ${new Date().getFullYear()} Hoy Pasa Algo. Todos los derechos reservados.`,
+        copy: '© {year}'
     }
-}
+} as const

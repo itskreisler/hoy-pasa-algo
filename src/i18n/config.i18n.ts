@@ -1,11 +1,10 @@
-import es from '@src/i18n/langs/es'
-import { createI18n } from '@src/i18n/i18n'
+import { createI18n } from '@kreisler/i18n'
+import { es } from '@src/i18n/langs/es'
 
-export const i18n = createI18n({
+export const { getAvailableLocales, getDefaultLocale, useTranslations } = createI18n({
     defaultLocale: 'es',
-    messages: {
-        es
-    }
+    messages: { es }
 })
 
-export const t = i18n.useTranslations('es')
+export const i18n = (locale = getDefaultLocale()) => useTranslations(locale)
+export const t = useTranslations(getDefaultLocale())
