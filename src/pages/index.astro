@@ -1,11 +1,21 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Header from '../components/Header.tsx';
+import Footer from '../components/Footer.tsx';
+import Button from '../components/Button.tsx';
+import { landingPageText } from '../constants/landingPage';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Hoy Pasa Algo">
+  <Header client:load />
+  <main class="container mx-auto px-4">
+    <div class="text-center py-20">
+      <h1 class="text-5xl font-bold mb-4">{landingPageText.title}</h1>
+      <p class="text-xl mb-8">{landingPageText.subtitle}</p>
+      <a href="/explore">
+        <Button>{landingPageText.exploreButton}</Button>
+      </a>
+    </div>
+  </main>
+  <Footer client:load />
 </Layout>

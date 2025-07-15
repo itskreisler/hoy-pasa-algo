@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.tsx';
+import Footer from '../components/Footer.tsx';
+import useUserStore from '../store/userStore';
+
+const user = useUserStore.getState().user;
+---
+
+<Layout title="Profile">
+  <Header client:load />
+  <main class="container mx-auto px-4">
+    <div class="text-center py-20">
+      <h1 class="text-5xl font-bold mb-4">Profile</h1>
+      {user ? (
+        <div>
+          <p class="text-xl">Email: {user.email}</p>
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={() => {
+            useUserStore.getState().logout();
+            window.location.href = '/';
+          }}>
+            Logout
+          </button>
+        </div>
+      ) : (
+        <p class="text-xl">You are not logged in.</p>
+      )}
+    </div>
+  </main>
+  <Footer client:load />
+</Layout>

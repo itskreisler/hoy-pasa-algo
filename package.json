@@ -4,17 +4,25 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev --host",
+    "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest"
   },
   "dependencies": {
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.11.0",
-    "tailwindcss": "^4.1.11"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.11",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
-    "typescript-eslint": "^8.36.0"
+    "typescript-eslint": "^8.36.0",
+    "vitest": "^3.2.4"
   }
 }

@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.tsx';
+import Footer from '../components/Footer.tsx';
+import CreateEventForm from '../components/CreateEventForm.tsx';
+---
+
+<Layout title="Create Event">
+  <Header client:load />
+  <main class="container mx-auto px-4">
+    <div class="flex justify-center items-center h-screen">
+      <div class="w-full max-w-xs">
+        <CreateEventForm client:load />
+      </div>
+    </div>
+  </main>
+  <Footer client:load />
+</Layout>

@@ -222,6 +222,60 @@ pnpm dev
 
 ---
 
+## 📖 **Guía de Uso**
+
+A continuación, se describe el propósito y el funcionamiento de cada una de las páginas principales de la aplicación:
+
+### 🏠 **Página de Inicio (`/`)**
+
+- **Propósito:** Es la página de bienvenida de la aplicación. Presenta una breve introducción al servicio y un llamado a la acción para explorar los eventos disponibles.
+- **Uso:**
+    1.  Al visitar la ruta raíz, verás un encabezado con el título "Hoy Pasa Algo".
+    2.  El cuerpo de la página contiene un eslogan y un botón para "Explorar eventos".
+    3.  Haz clic en el botón para navegar a la página de exploración.
+
+### 🔍 **Página de Exploración (`/explore`)**
+
+- **Propósito:** Es la página principal para descubrir eventos. Permite a los usuarios buscar y filtrar eventos según sus intereses.
+- **Uso:**
+    1.  **Barra de búsqueda:** En la parte superior, encontrarás una barra de búsqueda para filtrar eventos por título. Escribe el nombre de un evento para ver resultados en tiempo real.
+    2.  **Filtros de categoría:** Debajo de la búsqueda, hay botones para filtrar eventos por categoría. Haz clic en una categoría para ver solo los eventos que pertenecen a ella. Selecciona "All" para ver todos los eventos.
+    3.  **Lista de eventos:** Los eventos filtrados se muestran en una cuadrícula de tarjetas. Cada tarjeta muestra una imagen, el título, la descripción, la fecha y la categoría del evento.
+
+### 🔐 **Página de Inicio de Sesión (`/login`)**
+
+- **Propósito:** Permite a los usuarios existentes iniciar sesión en la aplicación.
+- **Uso:**
+    1.  Ingresa tu correo electrónico y contraseña en los campos correspondientes.
+    2.  Haz clic en el botón "Sign In".
+    3.  Si las credenciales son correctas (simulado), serás redirigido a la página de inicio.
+
+### 📝 **Página de Registro (`/register`)**
+
+- **Propósito:** Permite a nuevos usuarios crear una cuenta en la aplicación.
+- **Uso:**
+    1.  Completa los campos de correo electrónico, contraseña y confirmación de contraseña.
+    2.  Haz clic en el botón "Register".
+    3.  Si el registro es exitoso (simulado), serás redirigido a la página de inicio.
+
+### 👤 **Página de Perfil (`/profile`)**
+
+- **Propósito:** Muestra la información del usuario que ha iniciado sesión y le permite cerrar sesión.
+- **Uso:**
+    1.  Si has iniciado sesión, verás tu dirección de correo electrónico.
+    2.  Haz clic en el botón "Logout" para cerrar tu sesión y ser redirigido a la página de inicio.
+    3.  Si no has iniciado sesión, verás un mensaje indicando que no estás autenticado.
+
+### ✨ **Página de Creación de Eventos (`/create-event`)**
+
+- **Propósito:** Permite a los usuarios crear y publicar nuevos eventos.
+- **Uso:**
+    1.  Completa todos los campos del formulario, incluyendo título, descripción, fecha, categoría y una URL de imagen.
+    2.  Haz clic en el botón "Create Event".
+    3.  Una vez creado el evento, serás redirigido a la página de exploración, donde podrás ver tu nuevo evento en la lista.
+
+---
+
 ## 🔮 **Roadmap Futuro**
 
 ### 🎯 **Versión 2.0**
