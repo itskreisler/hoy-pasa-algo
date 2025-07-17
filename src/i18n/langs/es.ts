@@ -6,7 +6,7 @@ export const es = {
         about: 'Acerca de',
         contact: 'Contacto',
         login: 'Iniciar sesión',
-        register: 'Registrarse'
+        singup: 'Registrarse'
     },
     page: {
         home: {
