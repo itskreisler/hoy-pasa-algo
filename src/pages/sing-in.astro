@@ -1,0 +1,57 @@
+---
+import "@src/styles/global.css";
+---
+
+<a
+    href="#"
+    class="block w-10 h-8 border-2 border-white rounded absolute right-5 top-5 no-underline after:content-[''] after:block after:w-5 after:h-1 after:bg-white after:absolute after:mx-auto after:top-1 after:left-0 after:right-0 after:shadow-[0_8px,0_16px]"
+    id="openMenu"
+>
+</a>
+<dialog
+    class="fixed inset-0 m-auto w-[60vw] max-w-lg h-fit transition-opacity duration-500 rounded border-0 p-5 shadow-lg backdrop:backdrop-blur-sm data-[open]:opacity-100 opacity-0 pointer-events-none open:pointer-events-auto open:opacity-100"
+>
+    <h2 class="text-xl font-bold mb-4">Menu</h2>
+    <ul class="list-none p-0 mb-4 space-y-2">
+        <li>
+            <a
+                href="/login"
+                class="text-blue-400 hover:text-blue-300 transition-colors"
+                >Login</a>
+        </li>
+        <li>
+            <a
+                href="/sign-in"
+                class="text-blue-400 hover:text-blue-300 transition-colors"
+                >Sign In</a>
+        </li>
+        <li>
+            <a
+                href="/"
+                class="text-blue-400 hover:text-blue-300 transition-colors"
+                >Home</a>
+        </li>
+    </ul>
+</dialog>
+<script>
+    import { $ } from "@src/lib/dom";
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const openButton = $("#openMenu");
+
+        const dialog = $("dialog") as HTMLDialogElement;
+
+        openButton &&
+            openButton.addEventListener("click", () => {
+                dialog.showModal();
+            });
+
+        dialog.addEventListener("click", (e) => {
+            const DIALOG = e.target as HTMLDialogElement;
+            console.log(DIALOG.nodeName);
+            if (DIALOG.nodeName === "DIALOG") {
+                dialog.close("dismiss");
+            }
+        });
+    });
+</script>
