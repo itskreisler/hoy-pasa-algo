@@ -6,24 +6,11 @@ from routes.users import users_bp
 from routes.events import events_bp
 import os
 from typing import Optional, Dict, Any
+import mimetypes
 
 
 def root_dir():
     return os.path.abspath(os.path.dirname(__file__))
-
-
-def get_file(filename: str):  # pragma: no cover
-    try:
-        src = os.path.join(root_dir(), filename)
-        print("src", src)
-        # Figure out how flask returns static files
-        # Tried:
-        # - render_template
-        # - send_file
-        # This should not be so non-obvious
-        return open(src).read()
-    except IOError as exc:
-        return str(exc)
 
 
 def create_app(config_name: Optional[str] = None) -> Flask:
@@ -31,7 +18,12 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     if config_name is None:
         config_name = os.environ.get("FLASK_ENV", "default")
 
-    app = Flask(__name__, static_url_path="", static_folder="static")
+    mimetypes.add_type("application/javascript", ".js")
+    mimetypes.add_type("text/css", ".css")
+
+    # Configurar la carpeta estática
+    static_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "static"))
+    app = Flask(__name__, static_folder=static_folder)
 
     # Configurar CORS
     CORS(app, origins=["http://localhost:4321", "http://127.0.0.1:4321"])
@@ -44,25 +36,19 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     app.register_blueprint(events_bp)
 
     # Configurar rutas estáticas
-    dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "static"))
+    # dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "static"))
 
-    @app.route("/", methods=["GET"])
-    def index() -> Response:
-        return send_from_directory(dist, "index.html")
+    @app.route("/")
+    def index():
+        if app.static_folder is None:
+            return "Static folder not configured", 500
+        return send_from_directory(app.static_folder, "index.html")
 
-    @app.route("/", defaults={"path": ""})
     @app.route("/<path:path>")
-    def static_file(path: str):
-        mimetypes = {
-            ".css": "text/css",
-            ".html": "text/html",
-            ".js": "application/javascript",
-        }
-        complete_path = os.path.join(root_dir(), path)
-        ext = os.path.splitext(path)[1]
-        mimetype = mimetypes.get(ext, "text/html")
-        content = get_file(complete_path)
-        return Response(content, mimetype=mimetype)
+    def serve_static(path: str) -> Response:
+        if app.static_folder is None:
+            return Response("Static folder not configured", status=500)
+        return send_from_directory(app.static_folder, path)
 
     @app.route("/docs")
     def api_info() -> Dict[str, Any]:
