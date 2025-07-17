@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
+    "@kreisler/createapi": "^3.0.0",
     "@kreisler/i18n": "^1.0.1",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.11.0",
