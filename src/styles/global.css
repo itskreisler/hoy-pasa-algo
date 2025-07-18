@@ -8,3 +8,72 @@ body {
   height: 100%;
   scroll-behavior: smooth;
 }
+
+/* Form Components */
+.form-container {
+  @apply w-full max-w-md;
+}
+
+.form-card {
+  @apply bg-white rounded-lg shadow-md p-6 sm:p-8;
+}
+
+.form-title {
+  @apply text-2xl sm:text-3xl font-bold text-center mb-6 text-gray-800;
+}
+
+.form-group {
+  @apply space-y-4;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+}
+
+.btn-primary {
+  @apply w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors font-medium;
+}
+
+.btn-social {
+  @apply w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors;
+}
+
+.form-text {
+  @apply text-center text-sm text-gray-600;
+}
+
+.form-divider {
+  @apply mt-6;
+}
+
+.form-divider-line {
+  @apply absolute inset-0 flex items-center;
+}
+
+.form-divider-border {
+  @apply w-full border-t border-gray-300;
+}
+
+.form-divider-text {
+  @apply relative flex justify-center text-sm;
+}
+
+.form-divider-span {
+  @apply px-2 bg-white text-gray-500;
+}
+
+.checkbox-input {
+  @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+}
+
+.checkbox-label {
+  @apply ml-2 block text-sm text-gray-700;
+}
+
+.link {
+  @apply text-blue-600 hover:text-blue-700 font-medium;
+}

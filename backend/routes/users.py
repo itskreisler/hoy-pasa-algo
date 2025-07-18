@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
-from dataclasses import dataclass
-
+from libs.helpers import validate
+from models.usuario import Usuario
+from flask import Blueprint, jsonify
 
 # Blueprint para users
 users_bp = Blueprint("users", __name__, url_prefix="/api/v1/users")
@@ -17,8 +17,9 @@ def get_user(user_id: int):
 
 
 @users_bp.route("/", methods=["POST"])
-def create_user():
-    return jsonify({})
+@validate(Usuario, source="json")
+def create_user(validated: Usuario):
+    return jsonify({"type": "success", "message": "🤑", "data": validated.model_dump()})
 
 
 @users_bp.route("/<int:user_id>", methods=["PUT"])
