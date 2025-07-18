@@ -4,6 +4,7 @@ from flask_cors import CORS
 from config import config
 from routes.users import users_bp
 from routes.events import events_bp
+from routes.auth import auth_bp
 import os
 from typing import Optional, Dict, Any
 import mimetypes
@@ -34,6 +35,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     # Registrar blueprints
     app.register_blueprint(users_bp)
     app.register_blueprint(events_bp)
+    app.register_blueprint(auth_bp)
 
     # Configurar rutas estáticas
     # dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "static"))
@@ -54,7 +56,11 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     def api_info() -> Dict[str, Any]:
         return {
             "message": "API Backend funcionando",
-            "endpoints": {"users": "/api/v1/users", "events": "/api/v1/events"},
+            "endpoints": {
+                "users": "/api/v1/users",
+                "events": "/api/v1/events",
+                "auth": "/api/v1/auth",
+            },
         }
 
     return app

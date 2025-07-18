@@ -4,6 +4,33 @@ from pydantic import BaseModel, ValidationError
 from typing import Callable, Any, Literal, Union
 import base64
 import json
+import hashlib
+
+
+def hash_password(password: str) -> str:
+    """Hashea la contraseña usando SHA256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Verifica si la contraseña coincide con el hash"""
+    return hash_password(password) == hashed
+
+
+def create_token(user_data: dict[str, Any]) -> str:
+    """Crea un token simple usando base64 (en producción usa JWT)"""
+    token_data = json.dumps(user_data)
+    return base64.b64encode(token_data.encode()).decode()
+
+
+def decode_token(token: str) -> tuple[Exception | None, dict[str, Any] | None]:
+    """Decodifica un token y devuelve los datos del usuario"""
+    try:
+        decoded_data = base64.b64decode(token.encode())
+        user_data = json.loads(decoded_data.decode())
+        return (None, user_data)
+    except Exception as e:
+        return (e, None)
 
 
 def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
@@ -11,20 +38,17 @@ def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
     def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
         auth = request.headers.get("Authorization")
         if not auth or not auth.startswith("Bearer "):
-            return jsonify({"error": "Falta token"})
+            return jsonify({"type": "error", "message": "Token de autorización requerido"}), 401
 
         token = auth.replace("Bearer ", "")
-        try:
-            decoded = base64.b64decode(token.encode()).decode()
-            data = json.loads(decoded)
-        except Exception:
-            return jsonify({"error": "Token inválido"})
 
-        # Puedes validar cosas como:
-        # if data.get("rol") != "admin":
-        # return jsonify({"error": "No autorizado"})
+        # Usar la función decode_token
+        error, user_data = decode_token(token)
+        if error or not user_data:
+            return jsonify({"type": "error", "message": "Token inválido"}), 401
 
-        return f(*args, user=data, **kwargs)
+        # Pasar los datos del usuario a la función
+        return f(*args, user=user_data, **kwargs)
 
     return wrapper
 

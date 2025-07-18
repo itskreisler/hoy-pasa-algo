@@ -15,8 +15,8 @@ class Usuario(BaseModel):
         default=None,
         description="Rol del usuario, puede ser 'admin' o 'user'",
     )
-    full_name: str = Field(
-        ...,
+    full_name: Optional[str] = Field(
+        default=None,
         description="Nombre completo del usuario",
     )
 
