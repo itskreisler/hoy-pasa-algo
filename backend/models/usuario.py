@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, field_validator
-from typing import Optional, Literal, Any
+from typing import Optional, Literal
 import regex
 
 
@@ -20,14 +20,6 @@ class Usuario(BaseModel):
         description="Nombre completo del usuario",
     )
 
-    @field_validator("full_name")
-    @classmethod
-    def validate_full_name(cls, v: str) -> str:
-        pattern = regex.compile(r"^[\p{L}\s]+$")
-        if not pattern.match(v) or not v.replace(" ", "").isalpha():
-            raise ValueError("El nombre completo solo puede contener letras y espacios")
-        return v
-
     email: EmailStr = Field(..., description="Correo electrónico del usuario")
     password: str = Field(..., min_length=8, description="Contraseña del usuario")
     birth_date: Optional[str] = Field(
@@ -35,6 +27,10 @@ class Usuario(BaseModel):
     )
     gener: Optional[Literal["M", "F"]] = Field(default=None, description="Género del usuario")
 
+    @field_validator("full_name")
     @classmethod
-    def to_json(cls, usuario: "Usuario") -> dict[str, Any]:
-        return dict(usuario)
+    def validate_full_name(cls, v: str) -> str:
+        pattern = regex.compile(r"^[\p{L}\s]+$")
+        if not pattern.match(v) or not v.replace(" ", "").isalpha():
+            raise ValueError("El nombre completo solo puede contener letras y espacios")
+        return v

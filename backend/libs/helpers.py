@@ -1,10 +1,27 @@
 from flask import request, jsonify, Response
 from functools import wraps
 from pydantic import BaseModel, ValidationError
-from typing import Callable, Any, Literal, Union
+from typing import Callable, Any, Union, Sequence
 import base64
 import json
 import hashlib
+import secrets
+from enum import Enum
+import requests
+
+
+def generate_id(length: int = 32) -> str:
+    """Genera un ID único de longitud especificada usando un servicio externo o localmente"""
+    url = f"https://generate-secret.vercel.app/{length}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        secret = response.text.strip()
+        return secret
+    # Si no se puede obtener el ID desde el servicio externo, generar uno localmente
+    return secrets.token_hex(length // 2)  # Genera un ID hexadecimal de la longitud especificada
+
+
+print(f"Generated ID: {generate_id()}")  # Debugging line
 
 
 def hash_password(password: str) -> str:
@@ -53,42 +70,60 @@ def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
     return wrapper
 
 
-def validate(modelo: type[BaseModel], source: Literal["json", "query", "form"] = "json"):
-    """Decorador para validar los datos de solicitudes entrantes contra un modelo pydantic."""
+class Method(str, Enum):
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    PATCH = "PATCH"
+    DELETE = "DELETE"
+
+
+def validate(
+    modelo: type[BaseModel],
+    include: Sequence[str] | None = None,
+    exclude: Sequence[str] | None = None,
+):
+    """
+    Decorador para validar datos entrantes usando Pydantic.
+    Puedes usar `include` para validar solo ciertos campos,
+    o `exclude` para omitir algunos. Si se usan ambos, `include` tiene prioridad.
+    """
 
     def decorador(func: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
             try:
-                print("request.get_json", request.get_json())
-                print("request.args.to_dict", request.args.to_dict())
-                print("request.form.to_dict", request.form.to_dict())
-                if source == "json":
-                    data = request.get_json()
-                elif source == "query":
-                    data = request.args.to_dict()
-                elif source == "form":
-                    data = request.form.to_dict()
-                else:
-                    return jsonify({"type": "error", "message": "Invalid source type"})
+                metodo = Method(request.method)
 
-                validated = modelo(**data)
+                if metodo == Method.GET:
+                    data = request.args.to_dict()
+                elif metodo in [Method.POST, Method.PUT, Method.PATCH]:
+                    data = request.get_json() or request.form.to_dict()
+                else:
+                    return jsonify({"type": "error", "message": f"Unsupported method: {metodo}"})
+
+                # Aplicar include o exclude según lo recibido
+                if include:
+                    data = {k: v for k, v in data.items() if k in include}
+                elif exclude:
+                    data = {k: v for k, v in data.items() if k not in exclude}
+
+                validated = modelo.model_validate(data)
 
             except ValidationError as ve:
-                # Los errores de Pydantic siempre se pueden obtener, no necesitamos tryExcept aquí
-                errors_list = ve.errors()
-
-                # Convertir los errores a un formato serializable
-                serializable_errors: list[dict[str, Any]] = []
-                for error in errors_list:
-                    error_dict: dict[str, Any] = {
-                        "loc": error.get("loc", []),
-                        "msg": str(error.get("msg", "")),
-                        "type": str(error.get("type", "")),
+                return jsonify(
+                    {
+                        "type": "warning",
+                        "message": [
+                            {
+                                "loc": err.get("loc", []),
+                                "msg": str(err.get("msg", "")),
+                                "type": str(err.get("type", "")),
+                            }
+                            for err in ve.errors()
+                        ],
                     }
-                    serializable_errors.append(error_dict)
-
-                return jsonify({"type": "warning", "message": serializable_errors})
+                )
 
             except Exception as e:
                 return jsonify({"type": "error", "message": str(e)})

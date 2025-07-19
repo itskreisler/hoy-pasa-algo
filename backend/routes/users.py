@@ -17,7 +17,7 @@ def get_user(user_id: int):
 
 
 @users_bp.route("/", methods=["POST"])
-@validate(Usuario, source="json")
+@validate(Usuario, include=["email", "password"])
 def create_user(validated: Usuario):
     return jsonify({"type": "success", "message": "🤑", "data": validated.model_dump()})
 

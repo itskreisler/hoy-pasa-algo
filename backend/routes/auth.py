@@ -28,7 +28,7 @@ def find_user_by_username(username: str) -> Optional[dict[str, Any]]:
 
 
 @auth_bp.route("/register", methods=["POST"])
-@validate(Usuario, source="json")
+@validate(Usuario)
 def register(validated: Usuario):
     """Registra un nuevo usuario"""
     try:
@@ -188,7 +188,9 @@ def protected_endpoint(user: dict[str, Any]):
     return jsonify(
         {
             "type": "success",
-            "message": f"Hola {user.get('username', 'Usuario')}, tienes acceso a este endpoint protegido!",
+            "message": (
+                f"Hola {user.get('username', 'Usuario')}, tienes acceso a este endpoint protegido!"
+            ),
             "data": {"user_id": user.get("id"), "rol": user.get("rol")},
         }
     ), 200
@@ -198,9 +200,14 @@ def protected_endpoint(user: dict[str, Any]):
 @auth_required
 def admin_only_endpoint(user: dict[str, Any]):
     """Ejemplo de endpoint que requiere rol de administrador"""
+    print(f"Usuario autenticado: {user.get('username')}, Rol: {user.get('rol')}")
     if user.get("rol") != "admin":
         return jsonify(
-            {"type": "error", "message": "Acceso denegado. Se requiere rol de administrador."}
+            {
+                "type": "error",
+                "message": "Acceso denegado. Se requiere rol de administrador.",
+                "data": user,
+            }
         ), 403
 
     return jsonify(
