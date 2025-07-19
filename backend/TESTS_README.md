@@ -110,7 +110,7 @@ tests/
 
 ### Tests de Soft Delete:
 - Requieren servidor corriendo
-- Prueban todos los estados: activo → archivado → eliminado → hard delete
+- Prueban todos los estados: active → archived → deleted → hard delete(delete from DB)
 - Verifican cascada de favoritos
 
 ## 🔧 Configuración uv venv:
