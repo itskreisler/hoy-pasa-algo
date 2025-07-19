@@ -12,6 +12,7 @@ import requests
 
 def generate_id(length: int = 32) -> str:
     """Genera un ID único de longitud especificada usando un servicio externo o localmente"""
+    return secrets.token_hex(length // 2)
     url = f"https://generate-secret.vercel.app/{length}"
     response = requests.get(url)
     if response.status_code == 200:
@@ -19,9 +20,6 @@ def generate_id(length: int = 32) -> str:
         return secret
     # Si no se puede obtener el ID desde el servicio externo, generar uno localmente
     return secrets.token_hex(length // 2)  # Genera un ID hexadecimal de la longitud especificada
-
-
-print(f"Generated ID: {generate_id()}")  # Debugging line
 
 
 def hash_password(password: str) -> str:

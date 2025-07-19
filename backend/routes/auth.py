@@ -1,5 +1,6 @@
 from libs.helpers import validate, auth_required, hash_password, verify_password, create_token
 from models.usuario import Usuario
+from db.database import get_user_model
 from flask import Blueprint, jsonify, request
 from typing import Optional, Any
 
@@ -7,24 +8,16 @@ from typing import Optional, Any
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 
-# Simulación de base de datos de usuarios (en producción usarías una BD real)
-usuarios_db: list[dict[str, Any]] = []
-
-
 def find_user_by_email(email: str) -> Optional[dict[str, Any]]:
-    """Busca un usuario por email en la base de datos simulada"""
-    for user in usuarios_db:
-        if user.get("email") == email:
-            return user
-    return None
+    """Busca un usuario por email en la base de datos CSV"""
+    user_model = get_user_model()
+    return user_model.find_one_by_field("email", email)
 
 
 def find_user_by_username(username: str) -> Optional[dict[str, Any]]:
-    """Busca un usuario por username en la base de datos simulada"""
-    for user in usuarios_db:
-        if user.get("username") == username:
-            return user
-    return None
+    """Busca un usuario por username en la base de datos CSV"""
+    user_model = get_user_model()
+    return user_model.find_one_by_field("username", username)
 
 
 @auth_bp.route("/register", methods=["POST"])
@@ -41,9 +34,8 @@ def register(validated: Usuario):
                 {"type": "error", "message": "Ya existe un usuario con este username"}
             ), 400
 
-        # Crear nuevo usuario
+        # Preparar datos del usuario
         user_data: dict[str, Any] = {
-            "id": len(usuarios_db) + 1,
             "username": validated.username,
             "email": validated.email,
             "full_name": validated.full_name,
@@ -53,14 +45,16 @@ def register(validated: Usuario):
             "gener": validated.gener,
         }
 
-        usuarios_db.append(user_data)
+        # Crear usuario usando el ORM
+        user_model = get_user_model()
+        created_user = user_model.create(user_data)
 
         # Crear token para el usuario recién registrado
         token_data: dict[str, Any] = {
-            "id": user_data["id"],
-            "username": user_data["username"],
-            "email": user_data["email"],
-            "rol": user_data["rol"],
+            "id": created_user["id"],
+            "username": created_user["username"],
+            "email": created_user["email"],
+            "rol": created_user["rol"],
         }
         token = create_token(token_data)
 
@@ -70,11 +64,11 @@ def register(validated: Usuario):
                 "message": "Usuario registrado exitosamente",
                 "data": {
                     "user": {
-                        "id": user_data["id"],
-                        "username": user_data["username"],
-                        "email": user_data["email"],
-                        "full_name": user_data["full_name"],
-                        "rol": user_data["rol"],
+                        "id": created_user["id"],
+                        "username": created_user["username"],
+                        "email": created_user["email"],
+                        "full_name": created_user["full_name"],
+                        "rol": created_user["rol"],
                     },
                     "token": token,
                 },

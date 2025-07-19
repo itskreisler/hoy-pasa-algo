@@ -4,7 +4,8 @@ import regex
 
 
 class Usuario(BaseModel):
-    id: Optional[int] = Field(default=None, description="ID único del usuario")
+    # a48e531183d43c07d6ad3b25d4918690
+    id: Optional[str] = Field(default=None, description="ID único del usuario")
     username: Optional[str] = Field(
         default=None,
         min_length=5,

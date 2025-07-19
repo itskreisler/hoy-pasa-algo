@@ -11,8 +11,8 @@ def get_users():
     return jsonify({})
 
 
-@users_bp.route("/<int:user_id>", methods=["GET"])
-def get_user(user_id: int):
+@users_bp.route("/<string:user_id>", methods=["GET"])
+def get_user(user_id: str):
     return jsonify({})
 
 
@@ -22,11 +22,11 @@ def create_user(validated: Usuario):
     return jsonify({"type": "success", "message": "🤑", "data": validated.model_dump()})
 
 
-@users_bp.route("/<int:user_id>", methods=["PUT"])
-def update_user(user_id: int):
+@users_bp.route("/<string:user_id>", methods=["PUT"])
+def update_user(user_id: str):
     return jsonify({})
 
 
-@users_bp.route("/<int:user_id>", methods=["DELETE"])
-def delete_user(user_id: int):
+@users_bp.route("/<string:user_id>", methods=["DELETE"])
+def delete_user(user_id: str):
     return jsonify({})
