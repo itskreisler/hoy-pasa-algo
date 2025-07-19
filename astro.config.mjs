@@ -9,7 +9,7 @@ import react from '@astrojs/react'
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: ['ptetxv-ip-190-61-46-146.tunnelmole.net'],
+      allowedHosts: [],
       watch: {
         ignored: ['**/backend/**']
       }
