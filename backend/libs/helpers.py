@@ -24,6 +24,8 @@ def generate_id(length: int = 32) -> str:
 
 def hash_password(password: str) -> str:
     """Hashea la contraseña usando SHA256"""
+    if not password or not password.strip():
+        raise ValueError("La contraseña no puede estar vacía")
     return hashlib.sha256(password.encode()).hexdigest()
 
 

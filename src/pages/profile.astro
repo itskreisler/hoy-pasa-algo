@@ -2,27 +2,11 @@
 import Layout from "@src/layouts/Layout.astro";
 import Header from "@src/components/global/Header.astro";
 import FooterSection from "@src/components/sections/FooterSection.astro";
+import ProfileComponent from "@src/components/pages/Profile.tsx";
 
 ---
 <Layout>
- 
   <Header />
-  <main class="flex-grow flex items-center justify-center px-4 py-8">
-      <div class="w-full max-w-4xl">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 p-6 sm:p-8 border dark:border-gray-700">
-              <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
-                  Mi Perfil
-              </h1>
-              <div class="text-center text-gray-600 dark:text-gray-400">
-                  <p>Aquí estará el perfil cuando inicies sesión</p>
-                  <p class="mt-4">
-                      <a href="/sign-in" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
-                          Iniciar sesión para ver tu perfil
-                      </a>
-                  </p>
-              </div>
-          </div>
-      </div>
-  </main>
+  <ProfileComponent client:load />
   <FooterSection />
 </Layout>

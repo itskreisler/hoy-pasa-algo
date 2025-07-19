@@ -30,8 +30,17 @@ class Usuario(BaseModel):
 
     @field_validator("full_name")
     @classmethod
-    def validate_full_name(cls, v: str) -> str:
+    def validate_full_name(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
         pattern = regex.compile(r"^[\p{L}\s]+$")
         if not pattern.match(v) or not v.replace(" ", "").isalpha():
             raise ValueError("El nombre completo solo puede contener letras y espacios")
+        return v
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("La contraseña no puede estar vacía")
         return v

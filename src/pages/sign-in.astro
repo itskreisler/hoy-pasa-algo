@@ -1,10 +1,12 @@
 ---
-import SignInComponent from '@src/components/pages/SignIn.astro';
-import Layout from '@src/layouts/Layout.astro';
-
+import SignInComponent from "@src/components/pages/SignIn.tsx";
+import Layout from "@src/layouts/Layout.astro";
+import Header from "@src/components/global/Header.astro";
+import FooterSection from "@src/components/sections/FooterSection.astro";
 ---
 
 <Layout>
-	
-	<SignInComponent />
+	<Header />
+	<SignInComponent client:load />
+	<FooterSection />
 </Layout>

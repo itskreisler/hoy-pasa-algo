@@ -1,6 +1,6 @@
 ---
 import { t } from "@src/i18n/config.i18n";
-import DesktopNav from "@src/components/navigation/DesktopNav.astro";
+import { DesktopNav } from "@src/components/react/DesktopNav";
 import MobileMenuButton from "@src/components/navigation/MobileMenuButton.astro";
 ---
 
@@ -14,7 +14,7 @@ import MobileMenuButton from "@src/components/navigation/MobileMenuButton.astro"
         </h1>
 
         <!-- Desktop Navigation -->
-        <DesktopNav />
+        <DesktopNav client:load />
 
         <!-- Mobile Menu Button -->
         <MobileMenuButton />

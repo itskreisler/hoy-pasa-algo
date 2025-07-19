@@ -8,12 +8,12 @@ from libs.helpers import validate, auth_required
 events_bp = Blueprint("events", __name__, url_prefix="/api/v1/events")
 
 # Registrar modelos en el ORM
-orm.register_model("evento", Evento, "eventos.csv")
+orm.register_model("event", Evento, "eventos.csv")
 orm.register_model("category", Category, "categories.csv")
 orm.register_model("favorite", Favorite, "favorites.csv")
 
 # Obtener instancias del ORM
-evento_model = orm.get_model("evento")
+evento_model = orm.get_model("event")
 category_model = orm.get_model("category")
 favorite_model = orm.get_model("favorite")
 

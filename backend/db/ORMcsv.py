@@ -33,10 +33,14 @@ class CSVModel:
 
     def _serialize_value(self, value: Any) -> str:
         """Convierte valores complejos a string para CSV"""
-        if isinstance(value, (dict, list)):
-            return json.dumps(value)
-        elif value is None:
+        if value is None:
             return ""
+        elif isinstance(value, str):
+            return value
+        elif isinstance(value, (dict, list)):
+            return json.dumps(value)
+        elif isinstance(value, (int, float, bool)):
+            return str(value)
         else:
             return str(value)
 
@@ -69,42 +73,8 @@ class CSVModel:
 
     def create(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Crea un nuevo registro"""
-        # Generar ID automático usando la función generate_id
-        records = self.find_all()
-
-        # Intentar generar ID entero si todos los IDs existentes son enteros
-        try:
-            # Verificar si todos los IDs son numéricos
-            numeric_ids: List[int] = []
-            for r in records:
-                record_id = r.get("id", 0)
-                if record_id is not None and str(record_id).isdigit():
-                    numeric_ids.append(int(record_id))
-                elif record_id is not None and record_id != "":
-                    # Hay IDs no numéricos, usar generate_id
-                    data["id"] = generate_id()
-                    break
-            else:
-                # Todos son numéricos, usar ID entero
-                max_id: int = max(numeric_ids, default=0)
-                data["id"] = max_id + 1
-        except Exception:
-            # En caso de error, usar generate_id
-            data["id"] = generate_id()
-
-        # Validar con Pydantic
-        validated = self.model_class.model_validate(data)
-        record = validated.model_dump()
-
-        # Escribir al CSV
-        fieldnames = list(self.model_class.model_fields.keys())
-        with open(self.full_path, "a", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            # Serializar valores complejos
-            serialized_record = {k: self._serialize_value(v) for k, v in record.items()}
-            writer.writerow(serialized_record)
-
-        return record
+        # Generar ID automático como string para compatibilidad
+        data["id"] = generate_id()
 
         # Validar con Pydantic
         validated = self.model_class.model_validate(data)

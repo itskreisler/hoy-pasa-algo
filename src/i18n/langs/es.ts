@@ -5,7 +5,8 @@ export const es = {
         events: 'Explorar Eventos',
         profile: 'Perfil',
         login: 'Iniciar sesión',
-        singup: 'Registrarse'
+        singup: 'Registrarse',
+        menu: 'Menú'
     },
     page: {
         home: {

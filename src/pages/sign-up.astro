@@ -1,10 +1,12 @@
 ---
-import Signup from '@src/components/pages/Signup.astro';
+import Signup from '@src/components/pages/Signup.tsx';
 import Layout from '@src/layouts/Layout.astro';
-
+import Header from '@src/components/global/Header.astro';
+import FooterSection from '@src/components/sections/FooterSection.astro';
 ---
 
 <Layout>
-	
-	<Signup />
+	<Header />
+	<Signup client:load />
+	<FooterSection />
 </Layout>

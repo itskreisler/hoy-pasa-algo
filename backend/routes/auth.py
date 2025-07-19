@@ -1,11 +1,15 @@
 from libs.helpers import validate, auth_required, hash_password, verify_password, create_token
 from models.usuario import Usuario
+from db.ORMcsv import orm
 from db.database import get_user_model
 from flask import Blueprint, jsonify, request
 from typing import Optional, Any
 
 # Blueprint para autenticación
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
+
+# Registrar modelos en el ORM
+orm.register_model("usuario", Usuario, "usuarios.csv")
 
 
 def find_user_by_email(email: str) -> Optional[dict[str, Any]]:
@@ -34,12 +38,25 @@ def register(validated: Usuario):
                 {"type": "error", "message": "Ya existe un usuario con este username"}
             ), 400
 
+        # Verificar que la contraseña es válida
+        if not validated.password or not validated.password.strip():
+            return jsonify(
+                {"type": "error", "message": "La contraseña debe ser un texto válido"}
+            ), 400
+
         # Preparar datos del usuario
+        try:
+            hashed_password: str = hash_password(validated.password)
+        except Exception as hash_error:
+            return jsonify(
+                {"type": "error", "message": f"Error al procesar contraseña: {str(hash_error)}"}
+            ), 500
+
         user_data: dict[str, Any] = {
             "username": validated.username,
             "email": validated.email,
             "full_name": validated.full_name,
-            "password": hash_password(validated.password),
+            "password": hashed_password,
             "rol": validated.rol or "user",
             "birth_date": validated.birth_date,
             "gener": validated.gener,
