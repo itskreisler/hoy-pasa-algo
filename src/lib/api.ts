@@ -1,7 +1,6 @@
 import { createApi, type ArgsCreateApi } from '@kreisler/createapi'
 
-// const API = createApi('http://127.0.0.1:5000/api/v1')
-export const API: BackendAPI = createApi('http://127.0.0.1:5000')
+const API: BackendAPI = createApi('http://127.0.0.1:5000/api/v1')
 
 interface BackendAPI {
     registro: (_: undefined, __: undefined, ___: ArgsCreateApi) => Promise<{

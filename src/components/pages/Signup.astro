@@ -1,73 +1,74 @@
 ---
 import Header from "@src/components/global/Header.astro";
+import FooterSection from "@src/components/sections/FooterSection.astro";
 const t = (key: string) => key; // Placeholder for translation function
 ---
 
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
-    <Header />
-    <main class="flex-grow flex items-center justify-center px-4 py-8">
-        <div class="form-container">
-            <div class="form-card">
-                <h1 class="form-title">
+<Header />
+<main class="flex-grow flex items-center justify-center px-4 py-8">
+    <div class="form-container">
+        <div class="form-card">
+            <h1 class="form-title">
+                Registrarse
+            </h1>
+            <form class="form-group">
+                <div>
+                    <label for="name" class="form-label">
+                        Nombre
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        autocomplete="name"
+                        required
+                        class="form-input"
+                        placeholder="Ingresa tu nombre completo"
+                    />
+                </div>
+                <div>
+                    <label for="email" class="form-label">
+                        Correo Electrónico
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                        required
+                        class="form-input"
+                        placeholder="ejemplo@correo.com"
+                    />
+                </div>
+                <div>
+                    <label for="password" class="form-label">
+                        Contraseña
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        autocomplete="new-password"
+                        required
+                        class="form-input"
+                        placeholder="Mínimo 8 caracteres"
+                    />
+                </div>
+                <button type="submit" class="btn-primary">
                     Registrarse
-                </h1>
-                <form class="form-group">
-                    <div>
-                        <label for="name" class="form-label">
-                            Nombre
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            autocomplete="name"
-                            required
-                            class="form-input"
-                            placeholder="Ingresa tu nombre completo"
-                        />
-                    </div>
-                    <div>
-                        <label for="email" class="form-label">
-                            Correo Electrónico
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            autocomplete="email"
-                            required
-                            class="form-input"
-                            placeholder="ejemplo@correo.com"
-                        />
-                    </div>
-                    <div>
-                        <label for="password" class="form-label">
-                            Contraseña
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            autocomplete="new-password"
-                            required
-                            class="form-input"
-                            placeholder="Mínimo 8 caracteres"
-                        />
-                    </div>
-                    <button type="submit" class="btn-primary">
-                        Registrarse
-                    </button>
-                </form>
-                <p class="mt-6 form-text">
-                    ¿Ya tienes una cuenta?
-                    <a href="/login" class="link">
-                        Inicia sesión
-                    </a>
-                </p>
-            </div>
+                </button>
+            </form>
+            <p class="mt-6 form-text">
+                ¿Ya tienes una cuenta?
+                <a href="/sign-in" class="link">
+                    Inicia sesión
+                </a>
+            </p>
         </div>
-    </main>
-</body>
+    </div>
+</main>
+<FooterSection />
+
 <script>
     import { register } from "@src/lib/api";
     import { $ } from "@src/lib/dom";

@@ -1,0 +1,23 @@
+---
+import { t } from "@src/i18n/config.i18n";
+---
+
+<main class="flex-1">
+    <h2
+        class="text-2xl md:text-3xl font-semibold mb-4 text-center md:text-left text-gray-900 dark:text-gray-100"
+    >
+        {t("page.home.title")}
+    </h2>
+    <p
+        class="mb-6 text-sm md:text-base leading-relaxed text-center md:text-left text-gray-700 dark:text-gray-300"
+    >
+        {t("page.home.description")}
+    </p>
+    <div class="text-center md:text-left">
+        <a
+            href="#eventos"
+            class="inline-block bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300 text-sm md:text-base font-medium"
+            >{t("page.home.viewEvents")}</a
+        >
+    </div>
+</main>

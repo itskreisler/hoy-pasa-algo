@@ -1,0 +1,63 @@
+---
+---
+
+<button
+    class="md:hidden w-10 h-8 border-2 border-white dark:border-gray-300 rounded relative focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 hover:bg-white hover:bg-opacity-10 dark:hover:bg-gray-700 dark:hover:bg-opacity-20"
+    id="mobileMenuButton"
+    aria-label="Abrir menú"
+>
+    <!-- Líneas del icono hamburguesa -->
+    <span class="hamburger-line hamburger-line-1 block w-5 h-0.5 bg-white dark:bg-gray-300 absolute left-1/2 transform -translate-x-1/2 transition-all duration-300"></span>
+    <span class="hamburger-line hamburger-line-2 block w-5 h-0.5 bg-white dark:bg-gray-300 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300"></span>
+    <span class="hamburger-line hamburger-line-3 block w-5 h-0.5 bg-white dark:bg-gray-300 absolute left-1/2 transform -translate-x-1/2 transition-all duration-300"></span>
+</button>
+
+<style>
+    /* Posiciones iniciales de las líneas */
+    .hamburger-line-1 {
+        top: 6px;
+    }
+    .hamburger-line-3 {
+        bottom: 6px;
+    }
+    
+    /* Estado activo del botón */
+    #mobileMenuButton.active .hamburger-line-1 {
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    
+    #mobileMenuButton.active .hamburger-line-2 {
+        opacity: 0;
+    }
+    
+    #mobileMenuButton.active .hamburger-line-3 {
+        bottom: auto;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById('mobileMenuButton')
+        
+        if (button) {
+            button.addEventListener('click', () => {
+                // Agregar clase activa para la animación
+                button.classList.add('active')
+                button.setAttribute('aria-label', 'Cerrar menú')
+            })
+            
+            // Escuchar cuando se cierre el diálogo para revertir la animación
+            const dialog = document.querySelector('dialog')
+            if (dialog) {
+                dialog.addEventListener('close', () => {
+                    // Remover clase activa para revertir la animación
+                    button.classList.remove('active')
+                    button.setAttribute('aria-label', 'Abrir menú')
+                })
+            }
+        }
+    })
+</script>

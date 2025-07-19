@@ -1,0 +1,47 @@
+---
+interface Statistic {
+    value: string;
+    label: string;
+    description: string;
+}
+
+const statistics: Statistic[] = [
+    {
+        value: "1,247",
+        label: "Eventos Creados",
+        description: "Y creciendo cada día"
+    },
+    {
+        value: "8,392",
+        label: "Usuarios Registrados",
+        description: "Comunidad activa"
+    }
+];
+---
+
+<section class="bg-blue-600 dark:bg-blue-800 text-white py-8 md:py-12">
+    <div class="container mx-auto px-4 md:px-6">
+        <h3 class="text-2xl md:text-3xl font-bold text-center mb-8">
+            Nuestras Estadísticas
+        </h3>
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+        >
+            {statistics.map((stat) => (
+                <div class="text-center bg-blue-700 dark:bg-blue-900 rounded-lg p-6 md:p-8">
+                    <div
+                        class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2"
+                    >
+                        {stat.value}
+                    </div>
+                    <div class="text-lg md:text-xl text-blue-100 dark:text-blue-200">
+                        {stat.label}
+                    </div>
+                    <div class="text-sm md:text-base text-blue-200 dark:text-blue-300 mt-2">
+                        {stat.description}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>

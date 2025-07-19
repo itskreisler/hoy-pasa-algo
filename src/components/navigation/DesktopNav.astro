@@ -1,0 +1,40 @@
+---
+import { t } from "@src/i18n/config.i18n";
+---
+
+<nav class="hidden md:block">
+    <ul class="flex items-center space-x-6 lg:space-x-8">
+        <li>
+            <a 
+                href="/" 
+                class="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
+            >
+                {t("nav.home")}
+            </a>
+        </li>
+        <li>
+            <a 
+                href="#eventos" 
+                class="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
+            >
+                {t("nav.events")}
+            </a>
+        </li>
+        <li>
+            <a 
+                href="/sign-in" 
+                class="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
+            >
+                {t("nav.login")}
+            </a>
+        </li>
+        <li>
+            <a 
+                href="/sign-up" 
+                class="bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-md hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors text-sm lg:text-base font-medium"
+            >
+                {t("nav.singup")}
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -2,9 +2,8 @@ export const es = {
     title: 'Hoy Pasa Algo',
     nav: {
         home: 'Inicio',
-        events: 'Eventos',
-        about: 'Acerca de',
-        contact: 'Contacto',
+        events: 'Explorar Eventos',
+        profile: 'Perfil',
         login: 'Iniciar sesión',
         singup: 'Registrarse'
     },
