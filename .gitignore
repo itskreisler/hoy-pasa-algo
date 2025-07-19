@@ -24,4 +24,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .venv/
+.nox/
 __pycache__/
