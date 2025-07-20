@@ -1,4 +1,11 @@
-from libs.helpers import validate, auth_required, hash_password, verify_password, create_token
+from libs.helpers import (
+    validate,
+    auth_required,
+    hash_password,
+    verify_password,
+    create_token,
+    ResponseType,
+)
 from models.usuario import Usuario
 from db.ORMcsv import orm
 from db.database import get_user_model
@@ -80,23 +87,23 @@ def register(validated: Usuario) -> tuple[Response, int] | Response:
     """
     try:
         if find_user_by_email(validated.email):
-            return jsonify({"type": "error", "message": "Ya existe un usuario con este email"}), 400
+            return jsonify({"type": ResponseType.ERROR, "message": "Ya existe un usuario con este email"}), 400
 
         if validated.username and find_user_by_username(validated.username):
             return jsonify(
-                {"type": "error", "message": "Ya existe un usuario con este username"}
+                {"type": ResponseType.ERROR, "message": "Ya existe un usuario con este username"}
             ), 400
 
         if not validated.password or not validated.password.strip():
             return jsonify(
-                {"type": "error", "message": "La contraseña debe ser un texto válido"}
+                {"type": ResponseType.ERROR, "message": "La contraseña debe ser un texto válido"}
             ), 400
 
         try:
             hashed_password: str = hash_password(validated.password)
         except Exception as hash_error:
             return jsonify(
-                {"type": "error", "message": f"Error al procesar contraseña: {str(hash_error)}"}
+                {"type": ResponseType.ERROR, "message": f"Error al procesar contraseña: {str(hash_error)}"}
             ), 500
 
         user_data: dict[str, Any] = {
@@ -122,7 +129,7 @@ def register(validated: Usuario) -> tuple[Response, int] | Response:
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
                 "message": "Usuario registrado exitosamente",
                 "data": {
                     "user": {
@@ -138,7 +145,7 @@ def register(validated: Usuario) -> tuple[Response, int] | Response:
         ), 201
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -196,17 +203,17 @@ def login() -> tuple[Response, int] | Response:
         data = request.get_json()
 
         if not data:
-            return jsonify({"type": "warning", "message": "No se proporcionaron datos"}), 400
+            return jsonify({"type": ResponseType.WARNING, "message": "No se proporcionaron datos"}), 400
 
         email = data.get("email")
         password = data.get("password")
 
         if not email or not password:
-            return jsonify({"type": "warning", "message": "Email y contraseña son requeridos"}), 400
+            return jsonify({"type": ResponseType.WARNING, "message": "Email y contraseña son requeridos"}), 400
 
         user = find_user_by_email(email)
         if not user or not verify_password(password, user["password"]):
-            return jsonify({"type": "error", "message": "Credenciales inválidas"}), 401
+            return jsonify({"type": ResponseType.ERROR, "message": "Credenciales inválidas"}), 401
 
         token_data: dict[str, Any] = {
             "id": user["id"],
@@ -218,7 +225,7 @@ def login() -> tuple[Response, int] | Response:
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
                 "message": "Login exitoso",
                 "data": {
                     "user": {
@@ -234,13 +241,13 @@ def login() -> tuple[Response, int] | Response:
         ), 200
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout() -> tuple[Response, int] | Response:
     """Cierra sesión de usuario (en este caso simple solo devuelve confirmación)"""
-    return jsonify({"type": "info", "message": "Logout exitoso"}), 200
+    return jsonify({"type": ResponseType.INFO, "message": "Logout exitoso"}), 200
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -250,15 +257,15 @@ def get_current_user(user: dict[str, Any]) -> tuple[Response, int] | Response:
     try:
         user_email = user.get("email")
         if not user_email:
-            return jsonify({"type": "error", "message": "Email no encontrado en el token"}), 400
+            return jsonify({"type": ResponseType.ERROR, "message": "Email no encontrado en el token"}), 400
 
         current_user = find_user_by_email(user_email)
         if not current_user:
-            return jsonify({"type": "error", "message": "Usuario no encontrado"}), 404
+            return jsonify({"type": ResponseType.ERROR, "message": "Usuario no encontrado"}), 404
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
                 "message": "Usuario obtenido exitosamente",
                 "data": {
                     "user": {
@@ -275,7 +282,7 @@ def get_current_user(user: dict[str, Any]) -> tuple[Response, int] | Response:
         ), 200
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/protected", methods=["GET"])
@@ -284,7 +291,7 @@ def protected_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Ejemplo de endpoint protegido que requiere autenticación"""
     return jsonify(
         {
-            "type": "info",
+            "type": ResponseType.INFO,
             "message": f"Hola {user.get('username', 'Usuario')}, tienes acceso a este endpoint protegido!",
             "data": {"user_id": user.get("id"), "rol": user.get("rol")},
         }
@@ -298,7 +305,7 @@ def admin_only_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response
     if user.get("rol") != "admin":
         return jsonify(
             {
-                "type": "danger",
+                "type": ResponseType.DANGER,
                 "message": "Acceso denegado. Se requiere rol de administrador.",
                 "data": user,
             }
@@ -306,7 +313,7 @@ def admin_only_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response
 
     return jsonify(
         {
-            "type": "success",
+            "type": ResponseType.SUCCESS,
             "message": "Bienvenido al panel de administrador",
             "data": {"admin_info": "Información sensible solo para admins"},
         }

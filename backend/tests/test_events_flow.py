@@ -2,6 +2,7 @@ import unittest
 import json
 from factory import create_app
 from db.ORMcsv import orm
+from libs.helpers import ResponseType
 import os
 
 class EventsFlowTest(unittest.TestCase):
@@ -45,7 +46,7 @@ class EventsFlowTest(unittest.TestCase):
         response = self.client.post("/api/v1/events/", data=json.dumps(self.event_data), headers=self.auth_headers, content_type="application/json")
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertEqual(data["data"]["title"], self.event_data["title"])
 
     def test_02_get_events(self):
@@ -54,7 +55,7 @@ class EventsFlowTest(unittest.TestCase):
         response = self.client.get("/api/v1/events/")
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertEqual(len(data["data"]), 1)
 
     def test_03_get_event_by_id(self):
@@ -65,7 +66,7 @@ class EventsFlowTest(unittest.TestCase):
         response = self.client.get(f"/api/v1/events/{event_id}")
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertEqual(data["data"]["id"], event_id)
 
     def test_04_update_event(self):
@@ -77,7 +78,7 @@ class EventsFlowTest(unittest.TestCase):
         response = self.client.put(f"/api/v1/events/{event_id}", data=json.dumps(update_data), headers=self.auth_headers, content_type="application/json")
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertEqual(data["data"]["title"], "Título Actualizado")
 
     def test_05_soft_delete_event(self):
@@ -87,11 +88,11 @@ class EventsFlowTest(unittest.TestCase):
 
         del_response = self.client.delete(f"/api/v1/events/{event_id}", headers=self.auth_headers)
         self.assertEqual(del_response.status_code, 200)
-        self.assertEqual(json.loads(del_response.data)["type"], "success")
+        self.assertEqual(json.loads(del_response.data)["type"], ResponseType.SUCCESS)
 
         get_response = self.client.get(f"/api/v1/events/{event_id}")
         self.assertEqual(get_response.status_code, 404)
-        self.assertEqual(json.loads(get_response.data)["type"], "error")
+        self.assertEqual(json.loads(get_response.data)["type"], ResponseType.ERROR)
 
     def test_06_archive_and_restore_event(self):
         """Prueba el archivado y restauración de un evento."""
@@ -100,11 +101,11 @@ class EventsFlowTest(unittest.TestCase):
 
         archive_resp = self.client.put(f"/api/v1/events/{event_id}/archive", headers=self.auth_headers)
         self.assertEqual(archive_resp.status_code, 200)
-        self.assertEqual(json.loads(archive_resp.data)["type"], "success")
+        self.assertEqual(json.loads(archive_resp.data)["type"], ResponseType.SUCCESS)
 
         restore_resp = self.client.put(f"/api/v1/events/{event_id}/restore", headers=self.auth_headers)
         self.assertEqual(restore_resp.status_code, 200)
-        self.assertEqual(json.loads(restore_resp.data)["type"], "success")
+        self.assertEqual(json.loads(restore_resp.data)["type"], ResponseType.SUCCESS)
 
     def test_07_hard_delete_event(self):
         """Prueba el borrado físico (hard delete) de un evento."""
@@ -113,7 +114,7 @@ class EventsFlowTest(unittest.TestCase):
 
         response = self.client.delete(f"/api/v1/events/{event_id}/hard-delete", headers=self.auth_headers)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.data)["type"], "success")
+        self.assertEqual(json.loads(response.data)["type"], ResponseType.SUCCESS)
 
     def test_08_favorites(self):
         """Prueba el flujo completo de favoritos."""
@@ -122,15 +123,15 @@ class EventsFlowTest(unittest.TestCase):
 
         add_fav_resp = self.client.post("/api/v1/events/favorites", data=json.dumps({"event_id": event_id}), headers=self.auth_headers, content_type="application/json")
         self.assertEqual(add_fav_resp.status_code, 201)
-        self.assertEqual(json.loads(add_fav_resp.data)["type"], "success")
+        self.assertEqual(json.loads(add_fav_resp.data)["type"], ResponseType.SUCCESS)
 
         get_fav_resp = self.client.get("/api/v1/events/favorites", headers=self.auth_headers)
         self.assertEqual(get_fav_resp.status_code, 200)
-        self.assertEqual(json.loads(get_fav_resp.data)["type"], "success")
+        self.assertEqual(json.loads(get_fav_resp.data)["type"], ResponseType.SUCCESS)
 
         del_fav_resp = self.client.delete(f"/api/v1/events/favorites/{event_id}", headers=self.auth_headers)
         self.assertEqual(del_fav_resp.status_code, 200)
-        self.assertEqual(json.loads(del_fav_resp.data)["type"], "success")
+        self.assertEqual(json.loads(del_fav_resp.data)["type"], ResponseType.SUCCESS)
 
 
 if __name__ == "__main__":

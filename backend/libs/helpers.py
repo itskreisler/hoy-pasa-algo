@@ -72,6 +72,14 @@ def auth_optional(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
     return wrapper
 
 
+class ResponseType(str, Enum):
+    SUCCESS = "success"
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
+    DANGER = "danger"
+
+
 class Method(str, Enum):
     GET = "GET"
     POST = "POST"

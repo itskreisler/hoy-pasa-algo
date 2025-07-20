@@ -3,6 +3,7 @@ import json
 from factory import create_app
 from db.ORMcsv import orm
 from models.usuario import Usuario
+from libs.helpers import ResponseType
 import os
 
 
@@ -41,7 +42,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertIn("token", data["data"])
         self.assertEqual(data["data"]["user"]["email"], self.user_data["email"])
 
@@ -59,7 +60,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "error")
+        self.assertEqual(data["type"], ResponseType.ERROR)
         self.assertEqual(data["message"], "Ya existe un usuario con este email")
 
     def test_03_login(self):
@@ -77,7 +78,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertIn("token", data["data"])
 
     def test_04_login_invalid_credentials(self):
@@ -95,7 +96,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "error")
+        self.assertEqual(data["type"], ResponseType.ERROR)
         self.assertEqual(data["message"], "Credenciales inválidas")
 
     def test_05_access_protected_route(self):
@@ -112,7 +113,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
         self.assertEqual(data["data"]["user"]["email"], self.user_data["email"])
 
     def test_06_access_protected_route_no_token(self):
@@ -134,7 +135,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 403)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "danger")
+        self.assertEqual(data["type"], ResponseType.DANGER)
 
     def test_08_admin_only_route_as_admin(self):
         """Prueba que un admin sí puede acceder a una ruta de admin."""
@@ -155,7 +156,7 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        self.assertEqual(data["type"], "success")
+        self.assertEqual(data["type"], ResponseType.SUCCESS)
 
 
 if __name__ == "__main__":
