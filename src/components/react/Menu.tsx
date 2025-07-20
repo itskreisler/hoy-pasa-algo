@@ -103,23 +103,34 @@ export const Menu: React.FC<MenuProps> = ({ className = '' }) => {
           </li>
           <li>
             <a
-              href="#eventos"
+              href="/explore"
               className="block py-3 px-4 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors font-medium"
               onClick={() => dialogRef.current?.close('dismiss')}
             >
-              {t('nav.events')}
+              {t('nav.explore')}
             </a>
           </li>
           {isAuthenticated && (
-            <li>
-              <a
-                href="/profile"
-                className="block py-3 px-4 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors font-medium"
-                onClick={() => dialogRef.current?.close('dismiss')}
-              >
-                {t('nav.profile')}
-              </a>
-            </li>
+            <>
+              <li>
+                <a
+                  href="/create-event"
+                  className="block py-3 px-4 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors font-medium"
+                  onClick={() => dialogRef.current?.close('dismiss')}
+                >
+                  {t('nav.create_event')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/profile"
+                  className="block py-3 px-4 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors font-medium"
+                  onClick={() => dialogRef.current?.close('dismiss')}
+                >
+                  {t('nav.profile')}
+                </a>
+              </li>
+            </>
           )}
           {!isAuthenticated && (
             <>

@@ -27,22 +27,32 @@ export const DesktopNav: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a 
-                        href="#eventos" 
+                    <a
+                        href="/explore"
                         className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                     >
-                        {t('nav.events')}
+                        {t('nav.explore')}
                     </a>
                 </li>
                 {isAuthenticated && (
-                    <li>
-                        <a 
-                            href="/profile" 
-                            className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
-                        >
-                            {t('nav.profile')}
-                        </a>
-                    </li>
+                    <>
+                        <li>
+                            <a
+                                href="/create-event"
+                                className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
+                            >
+                                {t('nav.create_event')}
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="/profile"
+                                className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
+                            >
+                                {t('nav.profile')}
+                            </a>
+                        </li>
+                    </>
                 )}
                 {!isAuthenticated && (
                     <>

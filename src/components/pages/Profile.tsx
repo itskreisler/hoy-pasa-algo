@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAuthStore } from '@src/stores/authStore'
 import { ProfileSkeleton } from '@src/components/ui'
+import { t } from '@src/i18n/config.i18n'
 
 const Profile: React.FC = () => {
     const { user, token, isAuthenticated, loading, logout, checkAuth } = useAuthStore()
@@ -27,7 +28,7 @@ const Profile: React.FC = () => {
                 <div className="w-full max-w-4xl">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
                         <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
-                            Mi Perfil
+                            {t('page.profile.title')}
                         </h1>
                         <div className="text-center space-y-4">
                             <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full mx-auto flex items-center justify-center">
@@ -36,7 +37,7 @@ const Profile: React.FC = () => {
                                 </svg>
                             </div>
                             <p className="text-gray-600 dark:text-gray-400 text-lg">
-                                Debes iniciar sesión para ver tu perfil
+                                {t('page.profile.you_must_be_logged_in')}
                             </p>
                             <div className="pt-4">
                                 <a 
@@ -46,7 +47,7 @@ const Profile: React.FC = () => {
                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                                     </svg>
-                                    Iniciar Sesión
+                                    {t('page.profile.sign_in')}
                                 </a>
                             </div>
                         </div>
@@ -63,13 +64,13 @@ const Profile: React.FC = () => {
                 <div className="w-full max-w-4xl">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
                         <div className="text-center">
-                            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Error al cargar el perfil</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-4">No se pudo cargar la información del usuario</p>
+                            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('page.profile.error_loading_profile')}</h2>
+                            <p className="text-gray-600 dark:text-gray-400 mb-4">{t('page.profile.could_not_load_user_info')}</p>
                             <button 
                                 onClick={() => window.location.reload()}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                             >
-                                Recargar página
+                                {t('page.profile.reload_page')}
                             </button>
                         </div>
                     </div>
@@ -90,10 +91,10 @@ const Profile: React.FC = () => {
                             </div>
                             <div>
                                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
-                                    Mi Perfil
+                                    {t('page.profile.title')}
                                 </h1>
                                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                    Información de tu cuenta
+                                    {t('page.profile.account_info')}
                                 </p>
                             </div>
                         </div>
@@ -104,7 +105,7 @@ const Profile: React.FC = () => {
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                             </svg>
-                            Cerrar Sesión
+                            {t('page.profile.log_out')}
                         </button>
                     </div>
                     
@@ -116,7 +117,7 @@ const Profile: React.FC = () => {
                                 <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                Información Personal
+                                {t('page.profile.personal_information')}
                             </h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -127,9 +128,9 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                         <div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Nombre de Usuario</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.username')}</p>
                                             <p className={`text-sm font-medium ${!(user as any)?.user?.username ? 'italic text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'}`}>
-                                                {(user as any)?.user?.username ? (user as any).user.username : 'No especificado'}
+                                                {(user as any)?.user?.username ? (user as any).user.username : t('page.profile.not_specified')}
                                             </p>
                                         </div>
                                     </div>
@@ -141,9 +142,9 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                         <div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Nombre Completo</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.full_name')}</p>
                                             <p className={`text-sm font-medium ${!(user as any)?.user?.full_name ? 'italic text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'}`}>
-                                                {(user as any)?.user?.full_name ? (user as any).user.full_name : 'No especificado'}
+                                                {(user as any)?.user?.full_name ? (user as any).user.full_name : t('page.profile.not_specified')}
                                             </p>
                                         </div>
                                     </div>
@@ -156,9 +157,9 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                         <div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Correo Electrónico</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.email')}</p>
                                             <p className={`text-sm font-medium ${!(user as any)?.user?.email ? 'italic text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'}`}>
-                                                {(user as any)?.user?.email ? (user as any).user.email : 'Sin correo especificado'}
+                                                {(user as any)?.user?.email ? (user as any).user.email : t('page.profile.not_specified')}
                                             </p>
                                         </div>
                                     </div>
@@ -172,7 +173,7 @@ const Profile: React.FC = () => {
                                 <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                 </svg>
-                                Información de Cuenta
+                                {t('page.profile.account_information')}
                             </h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -183,9 +184,9 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                                         </svg>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">ID Usuario</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.user_id')}</p>
                                             <p className="text-xs font-mono text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 px-2 py-1 rounded border truncate">
-                                                {(user as any)?.user?.id || 'N/A'}
+                                                {(user as any)?.user?.id || t('page.profile.not_available')}
                                             </p>
                                         </div>
                                     </div>
@@ -197,13 +198,13 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                         </svg>
                                         <div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Rol</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.role')}</p>
                                             <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${ 
                                                 (user as any)?.user?.rol === 'admin' 
                                                     ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200'
                                                     : 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200'
                                             }`}>
-                                                {(user as any)?.user?.rol === 'admin' ? 'Admin' : 'Usuario'}
+                                                {(user as any)?.user?.rol === 'admin' ? t('page.profile.admin') : t('page.profile.user')}
                                             </span>
                                         </div>
                                     </div>
@@ -215,10 +216,10 @@ const Profile: React.FC = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                         <div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Estado</p>
+                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('page.profile.status')}</p>
                                             <div className="flex items-center space-x-1">
                                                 <div className="w-2 h-2 bg-green-400 dark:bg-green-500 rounded-full"></div>
-                                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Activa</p>
+                                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{t('page.profile.active')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -233,21 +234,21 @@ const Profile: React.FC = () => {
                             <svg className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Estado de la Sesión
+                            {t('page.profile.session_status')}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">Token:</p>
+                                <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">{t('page.profile.token')}:</p>
                                 <p className="text-gray-900 dark:text-gray-100 font-mono text-xs break-all">
-                                    {token ? `${token.substring(0, 30)}...` : 'No disponible'}
+                                    {token ? `${token.substring(0, 30)}...` : t('page.profile.not_available')}
                                 </p>
                             </div>
                             <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">Estado:</p>
+                                <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">{t('page.profile.status')}:</p>
                                 <div className="flex items-center space-x-2">
                                     <div className={`w-2 h-2 rounded-full ${isAuthenticated ? 'bg-green-400 dark:bg-green-500' : 'bg-red-400 dark:bg-red-500'}`}></div>
                                     <p className="text-gray-900 dark:text-gray-100 font-medium">
-                                        {isAuthenticated ? 'Autenticado' : 'No autenticado'}
+                                        {isAuthenticated ? t('page.profile.authenticated') : t('page.profile.not_authenticated')}
                                     </p>
                                 </div>
                             </div>

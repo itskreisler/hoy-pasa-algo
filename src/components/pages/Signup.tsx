@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '@src/stores/authStore'
+import { t } from '@src/i18n/config.i18n'
 
 const Signup: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ const Signup: React.FC = () => {
                 <div className="form-container">
                     <div className="form-card">
                         <h1 className="form-title">
-                            Registrarse
+                            {t('page.sign_up.title')}
                         </h1>
                         
                         {error && (
@@ -57,7 +58,7 @@ const Signup: React.FC = () => {
                         <form className="form-group" onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="name" className="form-label">
-                                    Nombre
+                                    {t('page.sign_up.full_name')}
                                 </label>
                                 <input
                                     type="text"
@@ -74,7 +75,7 @@ const Signup: React.FC = () => {
                             </div>
                             <div>
                                 <label htmlFor="email" className="form-label">
-                                    Correo Electrónico
+                                    {t('page.sign_up.email')}
                                 </label>
                                 <input
                                     type="email"
@@ -91,7 +92,7 @@ const Signup: React.FC = () => {
                             </div>
                             <div>
                                 <label htmlFor="password" className="form-label">
-                                    Contraseña
+                                    {t('page.sign_up.password')}
                                 </label>
                                 <input
                                     type="password"
@@ -111,13 +112,13 @@ const Signup: React.FC = () => {
                                 className="btn-primary"
                                 disabled={loading}
                             >
-                                {loading ? 'Registrando...' : 'Registrarse'}
+                                {loading ? t('page.sign_up.registering') : t('page.sign_up.sign_up')}
                             </button>
                         </form>
                         <p className="mt-6 form-text">
-                            ¿Ya tienes una cuenta?
+                            {t('page.sign_up.already_have_account')}
                             <a href="/sign-in" className="link">
-                                Inicia sesión
+                                {t('page.sign_up.sign_in')}
                             </a>
                         </p>
                     </div>
