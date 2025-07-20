@@ -91,9 +91,14 @@ def validate(modelo: type[BaseModel]):
                 data = request.get_json() or {}
                 validated = modelo.model_validate(data)
             except ValidationError as ve:
+                # Asegurarse de que el error sea siempre serializable
+                error_messages = [
+                    {"loc": err.get("loc", []), "msg": err.get("msg", "")} for err in ve.errors()
+                ]
                 return jsonify({
                     "type": "validation_error",
-                    "errors": ve.errors()
+                    "message": "Error de validación",
+                    "errors": error_messages
                 }), 400
 
             kwargs['validated'] = validated

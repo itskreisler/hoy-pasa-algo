@@ -22,7 +22,7 @@ class StressFlowTest(unittest.TestCase):
 
         self.users = []
         for i in range(5):
-            user_data = {"email": f"user{i}@test.com", "password": "password"}
+            user_data = {"email": f"user{i}@test.com", "password": "password", "full_name": "Stress User"}
             reg_resp = self.client.post("/api/v1/auth/register", data=json.dumps(user_data), content_type="application/json")
             self.assertEqual(reg_resp.status_code, 201, f"Failed to register user {i}")
             token = json.loads(reg_resp.data)["data"]["token"]
@@ -57,12 +57,10 @@ class StressFlowTest(unittest.TestCase):
 
         # 2. Cada usuario actualiza su perfil y un evento
         for i, user in enumerate(self.users):
-            # Actualizar perfil
             update_profile_data = {"full_name": "Nombre Actualizado"}
             update_prof_resp = self.client.put(f"/api/v1/users/{user['id']}", data=json.dumps(update_profile_data), headers=user["headers"], content_type="application/json")
             self.assertEqual(update_prof_resp.status_code, 200, f"Failed to update profile for user {i}. Response: {update_prof_resp.data.decode()}")
 
-            # Actualizar evento
             event_to_update = user["events"][0]
             update_event_data = {"title": "Título Actualizado"}
             update_event_resp = self.client.put(f"/api/v1/events/{event_to_update['id']}", data=json.dumps(update_event_data), headers=user["headers"], content_type="application/json")
@@ -88,7 +86,6 @@ class StressFlowTest(unittest.TestCase):
 
         for user in self.users:
             event_to_fav = random.choice(public_events_ids)
-            # Asegurarse de que no sea su propio evento
             while any(e["id"] == event_to_fav for e in user["events"]):
                 event_to_fav = random.choice(public_events_ids)
 

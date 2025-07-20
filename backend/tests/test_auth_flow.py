@@ -47,13 +47,11 @@ class AuthFlowTest(unittest.TestCase):
 
     def test_02_register_duplicate_email(self):
         """Prueba que no se puede registrar un usuario con un email duplicado."""
-        # Primer registro
         self.client.post(
             "/api/v1/auth/register",
             data=json.dumps(self.user_data),
             content_type="application/json",
         )
-        # Segundo intento con el mismo email
         response = self.client.post(
             "/api/v1/auth/register",
             data=json.dumps(self.user_data),
@@ -61,17 +59,16 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
+        self.assertEqual(data["type"], "error")
         self.assertEqual(data["message"], "Ya existe un usuario con este email")
 
     def test_03_login(self):
         """Prueba el inicio de sesión de un usuario."""
-        # Primero, registrar
         self.client.post(
             "/api/v1/auth/register",
             data=json.dumps(self.user_data),
             content_type="application/json",
         )
-        # Luego, login
         login_data = {"email": self.user_data["email"], "password": self.user_data["password"]}
         response = self.client.post(
             "/api/v1/auth/login",
@@ -98,11 +95,11 @@ class AuthFlowTest(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
         data = json.loads(response.data)
+        self.assertEqual(data["type"], "error")
         self.assertEqual(data["message"], "Credenciales inválidas")
 
     def test_05_access_protected_route(self):
         """Prueba el acceso a una ruta protegida con un token válido."""
-        # Registrar y obtener token
         reg_response = self.client.post(
             "/api/v1/auth/register",
             data=json.dumps(self.user_data),
@@ -110,12 +107,12 @@ class AuthFlowTest(unittest.TestCase):
         )
         token = json.loads(reg_response.data)["data"]["token"]
 
-        # Acceder a la ruta protegida
         response = self.client.get(
             "/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"}
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
+        self.assertEqual(data["type"], "success")
         self.assertEqual(data["data"]["user"]["email"], self.user_data["email"])
 
     def test_06_access_protected_route_no_token(self):
@@ -127,7 +124,7 @@ class AuthFlowTest(unittest.TestCase):
         """Prueba que un usuario normal no puede acceder a una ruta de admin."""
         reg_response = self.client.post(
             "/api/v1/auth/register",
-            data=json.dumps(self.user_data), # rol='user'
+            data=json.dumps(self.user_data),
             content_type="application/json",
         )
         token = json.loads(reg_response.data)["data"]["token"]
@@ -136,6 +133,8 @@ class AuthFlowTest(unittest.TestCase):
             "/api/v1/auth/admin-only", headers={"Authorization": f"Bearer {token}"}
         )
         self.assertEqual(response.status_code, 403)
+        data = json.loads(response.data)
+        self.assertEqual(data["type"], "danger")
 
     def test_08_admin_only_route_as_admin(self):
         """Prueba que un admin sí puede acceder a una ruta de admin."""
@@ -155,6 +154,8 @@ class AuthFlowTest(unittest.TestCase):
             "/api/v1/auth/admin-only", headers={"Authorization": f"Bearer {token}"}
         )
         self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data["type"], "success")
 
 
 if __name__ == "__main__":

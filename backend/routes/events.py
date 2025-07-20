@@ -133,7 +133,8 @@ def get_events(user: dict[str, Any] | None) -> tuple[Response, int] | Response:
 
         return jsonify(
             {
-                "success": True,
+                "type": "success",
+                "message": "Eventos obtenidos exitosamente",
                 "data": paginated_events,
                 "pagination": {
                     "page": page,
@@ -144,7 +145,7 @@ def get_events(user: dict[str, Any] | None) -> tuple[Response, int] | Response:
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/<string:event_id>", methods=["GET"])
@@ -161,7 +162,7 @@ def get_event(event_id: str) -> tuple[Response, int] | Response:
         )
 
         if not event:
-            return jsonify({"success": False, "error": "Evento no encontrado o no disponible"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado o no disponible"}), 404
 
         response_data = event.copy()
         if event.get("status"):
@@ -170,9 +171,9 @@ def get_event(event_id: str) -> tuple[Response, int] | Response:
                 "message": "Este evento está archivado" if event["status"] == "archived" else None,
             }
 
-        return jsonify({"success": True, "data": response_data})
+        return jsonify({"type": "success", "message": "Evento obtenido exitosamente", "data": response_data})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/", methods=["POST"])
@@ -242,10 +243,10 @@ def create_event(validated: Evento, user: dict[str, Any]) -> tuple[Response, int
         event_data["user_id"] = str(user["id"])
         new_event = evento_model.create(event_data)
         return jsonify(
-            {"success": True, "data": new_event, "message": "Evento creado exitosamente"}
+            {"type": "success", "message": "Evento creado exitosamente", "data": new_event}
         ), 201
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/<string:event_id>", methods=["PUT"])
@@ -255,25 +256,25 @@ def update_event(event_id: str, user: dict[str, Any]) -> tuple[Response, int] | 
     try:
         data = request.get_json()
         if not data:
-            return jsonify({"success": False, "error": "No se proporcionaron datos"}), 400
+            return jsonify({"type": "warning", "message": "No se proporcionaron datos"}), 400
 
         existing_event = evento_model.find_by_id(event_id)
         if not existing_event:
-            return jsonify({"success": False, "error": "Evento no encontrado"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado"}), 404
 
         if str(existing_event.get("user_id")) != str(user["id"]):
             return jsonify(
-                {"success": False, "error": "No tienes permisos para actualizar este evento"}
+                {"type": "danger", "message": "No tienes permisos para actualizar este evento"}
             ), 403
 
         updated_event = evento_model.update_by_id(event_id, data)
         return jsonify(
-            {"success": True, "data": updated_event, "message": "Evento actualizado exitosamente"}
+            {"type": "success", "message": "Evento actualizado exitosamente", "data": updated_event}
         )
     except ValueError as e:
-        return jsonify({"success": False, "error": f"Error de validación: {str(e)}"}), 400
+        return jsonify({"type": "error", "message": f"Error de validación: {str(e)}"}), 400
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/<string:event_id>", methods=["DELETE"])
@@ -290,26 +291,26 @@ def delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, int] | 
             allow_archived=True,
         )
         if not existing_event:
-            return jsonify({"success": False, "error": "Evento no encontrado o ya eliminado"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado o ya eliminado"}), 404
 
         if str(existing_event.get("user_id")) != str(user["id"]):
             return jsonify(
-                {"success": False, "error": "No tienes permisos para eliminar este evento"}
+                {"type": "danger", "message": "No tienes permisos para eliminar este evento"}
             ), 403
 
         updated_event = evento_model.update_by_id(event_id, {"status": "deleted"})
         if updated_event:
             return jsonify(
                 {
-                    "success": True,
+                    "type": "success",
                     "message": "Evento eliminado exitosamente (soft delete)",
                     "info": "El evento ya no será visible pero se mantiene para referencias",
                 }
             )
         else:
-            return jsonify({"success": False, "error": "Error al eliminar el evento"}), 500
+            return jsonify({"type": "error", "message": "Error al eliminar el evento"}), 500
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/my-events", methods=["GET"])
@@ -318,9 +319,9 @@ def get_my_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtener eventos del usuario autenticado"""
     try:
         user_events = evento_model.find_by_field("user_id", str(user["id"]))
-        return jsonify({"success": True, "data": user_events, "total": len(user_events)})
+        return jsonify({"type": "success", "message": "Eventos del usuario obtenidos exitosamente", "data": user_events, "total": len(user_events)})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/search", methods=["GET"])
@@ -329,7 +330,7 @@ def search_events() -> tuple[Response, int] | Response:
     try:
         query = request.args.get("q", "").lower().strip()
         if not query:
-            return jsonify({"success": False, "error": "Parámetro de búsqueda requerido: q"}), 400
+            return jsonify({"type": "warning", "message": "Parámetro de búsqueda requerido: q"}), 400
 
         all_events = evento_model.find_all()
         filtered_events: list[dict[str, Any]] = []
@@ -345,14 +346,15 @@ def search_events() -> tuple[Response, int] | Response:
 
         return jsonify(
             {
-                "success": True,
+                "type": "success",
+                "message": f"Se encontraron {len(filtered_events)} eventos para la búsqueda '{query}'",
                 "data": filtered_events,
                 "total": len(filtered_events),
                 "query": query,
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/category/<string:category_id>", methods=["GET"])
@@ -361,10 +363,10 @@ def get_events_by_category(category_id: str) -> tuple[Response, int] | Response:
     try:
         events = evento_model.find_by_field("category_id", str(category_id))
         return jsonify(
-            {"success": True, "data": events, "total": len(events), "category_id": category_id}
+            {"type": "success", "message": f"Eventos de la categoría {category_id} obtenidos exitosamente", "data": events, "total": len(events), "category_id": category_id}
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/city/<city>", methods=["GET"])
@@ -372,9 +374,9 @@ def get_events_by_city(city: str) -> tuple[Response, int] | Response:
     """Obtener eventos por ciudad"""
     try:
         events = evento_model.find_by_field("city", city)
-        return jsonify({"success": True, "data": events, "total": len(events), "city": city})
+        return jsonify({"type": "success", "message": f"Eventos en {city} obtenidos exitosamente", "data": events, "total": len(events), "city": city})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/country/<country>", methods=["GET"])
@@ -382,9 +384,9 @@ def get_events_by_country(country: str) -> tuple[Response, int] | Response:
     """Obtener eventos por país"""
     try:
         events = evento_model.find_by_field("country", country)
-        return jsonify({"success": True, "data": events, "total": len(events), "country": country})
+        return jsonify({"type": "success", "message": f"Eventos en {country} obtenidos exitosamente", "data": events, "total": len(events), "country": country})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 # Rutas para categorías
@@ -393,9 +395,9 @@ def get_categories() -> tuple[Response, int] | Response:
     """Obtener todas las categorías"""
     try:
         categories = category_model.find_all()
-        return jsonify({"success": True, "data": categories, "total": len(categories)})
+        return jsonify({"type": "success", "message": "Categorías obtenidas exitosamente", "data": categories, "total": len(categories)})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/categories", methods=["POST"])
@@ -404,15 +406,15 @@ def create_category() -> tuple[Response, int] | Response:
     try:
         data = request.get_json()
         if not data:
-            return jsonify({"success": False, "error": "No se proporcionaron datos"}), 400
+            return jsonify({"type": "warning", "message": "No se proporcionaron datos"}), 400
         new_category = category_model.create(data)
         return jsonify(
-            {"success": True, "data": new_category, "message": "Categoría creada exitosamente"}
+            {"type": "success", "message": "Categoría creada exitosamente", "data": new_category}
         ), 201
     except ValueError as e:
-        return jsonify({"success": False, "error": f"Error de validación: {str(e)}"}), 400
+        return jsonify({"type": "error", "message": f"Error de validación: {str(e)}"}), 400
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/categories/<string:category_id>", methods=["GET"])
@@ -421,10 +423,10 @@ def get_category(category_id: str) -> tuple[Response, int] | Response:
     try:
         category = category_model.find_by_id(category_id)
         if not category:
-            return jsonify({"success": False, "error": "Categoría no encontrada"}), 404
-        return jsonify({"success": True, "data": category})
+            return jsonify({"type": "error", "message": "Categoría no encontrada"}), 404
+        return jsonify({"type": "success", "message": "Categoría obtenida exitosamente", "data": category})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 # ====== ENDPOINTS DE FAVORITOS ======
@@ -437,27 +439,27 @@ def add_favorite(user: dict[str, Any]) -> tuple[Response, int] | Response:
     try:
         data = request.get_json()
         if not data or not data.get("event_id"):
-            return jsonify({"success": False, "error": "event_id es requerido"}), 400
+            return jsonify({"type": "warning", "message": "event_id es requerido"}), 400
 
         event_id = data["event_id"]
         event = evento_model.find_by_id(event_id)
         if not event:
-            return jsonify({"success": False, "error": "Evento no encontrado"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado"}), 404
 
         user_favorites = favorite_model.find_by_field("user_id", str(user["id"]))
         existing_favorite = next(
             (fav for fav in user_favorites if fav["event_id"] == event_id), None
         )
         if existing_favorite:
-            return jsonify({"success": False, "error": "El evento ya está en favoritos"}), 400
+            return jsonify({"type": "warning", "message": "El evento ya está en favoritos"}), 400
 
         favorite_data = {"user_id": str(user["id"]), "event_id": event_id}
         new_favorite = favorite_model.create(favorite_data)
         return jsonify(
-            {"success": True, "data": new_favorite, "message": "Evento agregado a favoritos"}
+            {"type": "success", "message": "Evento agregado a favoritos", "data": new_favorite}
         ), 201
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/favorites", methods=["GET"])
@@ -471,9 +473,9 @@ def get_user_favorites(user: dict[str, Any]) -> tuple[Response, int] | Response:
             event = evento_model.find_by_id(fav["event_id"])
             if event:
                 favorite_events.append({"favorite_id": fav["id"], "event": event})
-        return jsonify({"success": True, "data": favorite_events, "total": len(favorite_events)})
+        return jsonify({"type": "success", "message": "Favoritos obtenidos exitosamente", "data": favorite_events, "total": len(favorite_events)})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/favorites/<string:event_id>", methods=["DELETE"])
@@ -484,11 +486,11 @@ def remove_favorite(event_id: str, user: dict[str, Any]) -> tuple[Response, int]
         user_favorites = favorite_model.find_by_field("user_id", str(user["id"]))
         favorite = next((fav for fav in user_favorites if fav["event_id"] == event_id), None)
         if not favorite:
-            return jsonify({"success": False, "error": "El evento no está en favoritos"}), 404
+            return jsonify({"type": "error", "message": "El evento no está en favoritos"}), 404
         favorite_model.delete_by_id(favorite["id"])
-        return jsonify({"success": True, "message": "Evento removido de favoritos"})
+        return jsonify({"type": "success", "message": "Evento removido de favoritos"})
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 # ====== ENDPOINTS ESPECÍFICOS PARA SOFT DELETE ======
@@ -506,25 +508,25 @@ def archive_event(event_id: str, user: dict[str, Any]) -> tuple[Response, int] |
         )
         if not existing_event:
             return jsonify(
-                {"success": False, "error": "Evento no encontrado o ya archivado/eliminado"}
+                {"type": "error", "message": "Evento no encontrado o ya archivado/eliminado"}
             ), 404
 
         if str(existing_event.get("user_id")) != str(user["id"]):
             return jsonify(
-                {"success": False, "error": "No tienes permisos para archivar este evento"}
+                {"type": "danger", "message": "No tienes permisos para archivar este evento"}
             ), 403
 
         updated_event = evento_model.update_by_id(event_id, {"status": "archived"})
         return jsonify(
             {
-                "success": True,
+                "type": "success",
                 "message": "Evento archivado exitosamente",
                 "data": updated_event,
                 "info": "El evento archivado estará disponible con filtro include_archived=true",
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/<string:event_id>/restore", methods=["PUT"])
@@ -536,29 +538,29 @@ def restore_event(event_id: str, user: dict[str, Any]) -> tuple[Response, int] |
             event_id, allow_deleted=False, allow_archived=True
         )
         if not existing_event:
-            return jsonify({"success": False, "error": "Evento no encontrado"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado"}), 404
 
         if existing_event.get("status") != "archived":
             return jsonify(
-                {"success": False, "error": "Solo se pueden restaurar eventos archivados"}
+                {"type": "warning", "message": "Solo se pueden restaurar eventos archivados"}
             ), 400
 
         if str(existing_event.get("user_id")) != str(user["id"]):
             return jsonify(
-                {"success": False, "error": "No tienes permisos para restaurar este evento"}
+                {"type": "danger", "message": "No tienes permisos para restaurar este evento"}
             ), 403
 
         updated_event = evento_model.update_by_id(event_id, {"status": None})
         return jsonify(
             {
-                "success": True,
+                "type": "success",
                 "message": "Evento restaurado exitosamente",
                 "data": updated_event,
                 "info": "El evento vuelve a estar activo y visible",
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/<string:event_id>/hard-delete", methods=["DELETE"])
@@ -571,13 +573,13 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
     try:
         existing_event = evento_model.find_by_id(event_id)
         if not existing_event:
-            return jsonify({"success": False, "error": "Evento no encontrado"}), 404
+            return jsonify({"type": "error", "message": "Evento no encontrado"}), 404
 
         if str(existing_event.get("user_id")) != str(user["id"]):
             return jsonify(
                 {
-                    "success": False,
-                    "error": "No tienes permisos para eliminar permanentemente este evento",
+                    "type": "danger",
+                    "message": "No tienes permisos para eliminar permanentemente este evento",
                 }
             ), 403
 
@@ -590,7 +592,7 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
         if success:
             return jsonify(
                 {
-                    "success": True,
+                    "type": "success",
                     "message": "Evento eliminado permanentemente",
                     "info": {
                         "warning": "Esta acción no se puede deshacer",
@@ -600,10 +602,10 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
             )
         else:
             return jsonify(
-                {"success": False, "error": "Error al eliminar el evento físicamente"}
+                {"type": "error", "message": "Error al eliminar el evento físicamente"}
             ), 500
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/deleted", methods=["GET"])
@@ -615,14 +617,15 @@ def get_deleted_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
         deleted_events = [e for e in user_events if e.get("status") == "deleted"]
         return jsonify(
             {
-                "success": True,
+                "type": "success",
+                "message": "Eventos eliminados obtenidos exitosamente",
                 "data": deleted_events,
                 "total": len(deleted_events),
                 "info": "Estos eventos están eliminados (soft delete) y no son visibles públicamente",
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @events_bp.route("/archived", methods=["GET"])
@@ -634,11 +637,12 @@ def get_archived_events(user: dict[str, Any]) -> tuple[Response, int] | Response
         archived_events = [e for e in user_events if e.get("status") == "archived"]
         return jsonify(
             {
-                "success": True,
+                "type": "success",
+                "message": "Eventos archivados obtenidos exitosamente",
                 "data": archived_events,
                 "total": len(archived_events),
                 "info": "Eventos archivados - pueden ser restaurados",
             }
         )
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
