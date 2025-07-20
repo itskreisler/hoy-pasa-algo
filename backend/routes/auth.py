@@ -2,7 +2,7 @@ from libs.helpers import validate, auth_required, hash_password, verify_password
 from models.usuario import Usuario
 from db.ORMcsv import orm
 from db.database import get_user_model
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from typing import Optional, Any
 
 # Blueprint para autenticación
@@ -26,8 +26,58 @@ def find_user_by_username(username: str) -> Optional[dict[str, Any]]:
 
 @auth_bp.route("/register", methods=["POST"])
 @validate(Usuario)
-def register(validated: Usuario):
-    """Registra un nuevo usuario"""
+def register(validated: Usuario) -> tuple[Response, int] | Response:
+    """
+    Registra un nuevo usuario.
+    ---
+    tags:
+      - Autenticación
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Usuario'
+    responses:
+      201:
+        description: Usuario registrado exitosamente.
+      400:
+        description: Datos inválidos o el usuario ya existe.
+    components:
+      schemas:
+        Usuario:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID único del usuario (generado automáticamente).
+            username:
+              type: string
+              description: Nombre de usuario.
+            email:
+              type: string
+              format: email
+              description: Correo electrónico del usuario.
+            full_name:
+              type: string
+              description: Nombre completo del usuario.
+            password:
+              type: string
+              format: password
+              description: Contraseña (mínimo 8 caracteres).
+            rol:
+              type: string
+              enum: ['admin', 'user']
+              description: Rol del usuario.
+            birth_date:
+              type: string
+              format: date
+              description: Fecha de nacimiento (YYYY-MM-DD).
+            gener:
+              type: string
+              enum: ['M', 'F']
+              description: Género del usuario.
+    """
     try:
         # Verificar si el usuario ya existe
         if find_user_by_email(validated.email):
@@ -97,8 +147,56 @@ def register(validated: Usuario):
 
 
 @auth_bp.route("/login", methods=["POST"])
-def login():
-    """Inicia sesión de usuario"""
+def login() -> tuple[Response, int] | Response:
+    """
+    Inicia sesión de usuario y devuelve un token de autenticación.
+    ---
+    tags:
+      - Autenticación
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email del usuario.
+                example: "test@example.com"
+              password:
+                type: string
+                description: Contraseña del usuario.
+                example: "strongpassword123"
+            required:
+              - email
+              - password
+    responses:
+      200:
+        description: Login exitoso.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: success
+                message:
+                  type: string
+                  example: Login exitoso
+                data:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                    user:
+                      $ref: '#/components/schemas/Usuario'
+      400:
+        description: Datos inválidos.
+      401:
+        description: Credenciales inválidas.
+    """
     try:
         data = request.get_json()
 
@@ -151,14 +249,14 @@ def login():
 
 
 @auth_bp.route("/logout", methods=["POST"])
-def logout():
+def logout() -> tuple[Response, int] | Response:
     """Cierra sesión de usuario (en este caso simple solo devuelve confirmación)"""
     return jsonify({"type": "success", "message": "Logout exitoso"}), 200
 
 
 @auth_bp.route("/me", methods=["GET"])
 @auth_required
-def get_current_user(user: dict[str, Any]):
+def get_current_user(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtiene información del usuario actual basado en el token"""
     try:
         # El decorador @auth_required ya validó el token y nos pasa user_data
@@ -194,7 +292,7 @@ def get_current_user(user: dict[str, Any]):
 
 @auth_bp.route("/protected", methods=["GET"])
 @auth_required
-def protected_endpoint(user: dict[str, Any]):
+def protected_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Ejemplo de endpoint protegido que requiere autenticación"""
     return jsonify(
         {
@@ -209,7 +307,7 @@ def protected_endpoint(user: dict[str, Any]):
 
 @auth_bp.route("/admin-only", methods=["GET"])
 @auth_required
-def admin_only_endpoint(user: dict[str, Any]):
+def admin_only_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Ejemplo de endpoint que requiere rol de administrador"""
     print(f"Usuario autenticado: {user.get('username')}, Rol: {user.get('rol')}")
     if user.get("rol") != "admin":

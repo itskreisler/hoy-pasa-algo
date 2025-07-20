@@ -5,6 +5,7 @@ from config import config
 from routes.users import users_bp
 from routes.events import events_bp
 from routes.auth import auth_bp
+from flasgger import Swagger
 import os
 from typing import Optional, Dict, Any
 import mimetypes
@@ -31,6 +32,15 @@ def create_app(config_name: Optional[str] = None) -> Flask:
 
     # Cargar configuración
     app.config.from_object(config[config_name])
+
+    # Configurar Swagger
+    app.config["SWAGGER"] = {
+        "title": "API de Eventos",
+        "uiversion": 3,
+        "openapi": "3.0.3",
+        "specs_route": "/api/docs/",
+    }
+    Swagger(app)
 
     # Registrar blueprints
     app.register_blueprint(users_bp)

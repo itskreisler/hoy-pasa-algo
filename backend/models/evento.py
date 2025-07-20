@@ -6,23 +6,21 @@ class Evento(BaseModel):
     id: Optional[str] = Field(default=None, description="ID único del evento")
     user_id: str
     title: str
-    description: Optional[str]
+    description: Optional[str] = None
     date: str
-    time: Optional[str]
-    country: Optional[str]
-    city: Optional[str]
-    category_id: Optional[str]  # Se usara una tabla de categorías ej "Deportes=1"
-    subcategory_id: Optional[
-        str
-    ]  # Subcategorías ej Atletismo, Ciclismo, etc. pertenecen a Deportes=1
-    hashtags: Optional[list[str]]
-    calendar: Optional[str]
-    image_url: Optional[str]
-    link: Optional[str]
+    time: Optional[str] = None
+    country: Optional[str] = None
+    city: Optional[str] = None
+    category_id: Optional[str] = None
+    subcategory_id: Optional[str] = None
+    hashtags: Optional[list[str]] = None
+    calendar: Optional[str] = None
+    image_url: Optional[str] = None
+    link: Optional[str] = None
     visibility: Literal["public", "private", "only_me"]
     status: Optional[Literal["active", "archived", "deleted"]] = Field(
         default="active", description="Estado del evento, por defecto 'active'"
-    )  # Estado del evento
+    )
 
 
 class Category(BaseModel):
