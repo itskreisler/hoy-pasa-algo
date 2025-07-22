@@ -1,8 +1,15 @@
-from libs.helpers import validate, auth_required, hash_password, verify_password, create_token
+from libs.helpers import (
+    validate,
+    auth_required,
+    hash_password,
+    verify_password,
+    create_token,
+    ResponseType,
+)
 from models.usuario import Usuario
 from db.ORMcsv import orm
 from db.database import get_user_model
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from typing import Optional, Any
 
 # Blueprint para autenticación
@@ -26,30 +33,77 @@ def find_user_by_username(username: str) -> Optional[dict[str, Any]]:
 
 @auth_bp.route("/register", methods=["POST"])
 @validate(Usuario)
-def register(validated: Usuario):
-    """Registra un nuevo usuario"""
+def register(validated: Usuario) -> tuple[Response, int] | Response:
+    """
+    Registra un nuevo usuario.
+    ---
+    tags:
+      - Autenticación
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Usuario'
+    responses:
+      201:
+        description: Usuario registrado exitosamente.
+      400:
+        description: Datos inválidos o el usuario ya existe.
+    components:
+      schemas:
+        Usuario:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID único del usuario (generado automáticamente).
+            username:
+              type: string
+              description: Nombre de usuario.
+            email:
+              type: string
+              format: email
+              description: Correo electrónico del usuario.
+            full_name:
+              type: string
+              description: Nombre completo del usuario.
+            password:
+              type: string
+              format: password
+              description: Contraseña (mínimo 8 caracteres).
+            rol:
+              type: string
+              enum: ['admin', 'user']
+              description: Rol del usuario.
+            birth_date:
+              type: string
+              format: date
+              description: Fecha de nacimiento (YYYY-MM-DD).
+            gener:
+              type: string
+              enum: ['M', 'F']
+              description: Género del usuario.
+    """
     try:
-        # Verificar si el usuario ya existe
         if find_user_by_email(validated.email):
-            return jsonify({"type": "error", "message": "Ya existe un usuario con este email"}), 400
+            return jsonify({"type": ResponseType.ERROR, "message": "Ya existe un usuario con este email"}), 400
 
         if validated.username and find_user_by_username(validated.username):
             return jsonify(
-                {"type": "error", "message": "Ya existe un usuario con este username"}
+                {"type": ResponseType.ERROR, "message": "Ya existe un usuario con este username"}
             ), 400
 
-        # Verificar que la contraseña es válida
         if not validated.password or not validated.password.strip():
             return jsonify(
-                {"type": "error", "message": "La contraseña debe ser un texto válido"}
+                {"type": ResponseType.ERROR, "message": "La contraseña debe ser un texto válido"}
             ), 400
 
-        # Preparar datos del usuario
         try:
             hashed_password: str = hash_password(validated.password)
         except Exception as hash_error:
             return jsonify(
-                {"type": "error", "message": f"Error al procesar contraseña: {str(hash_error)}"}
+                {"type": ResponseType.ERROR, "message": f"Error al procesar contraseña: {str(hash_error)}"}
             ), 500
 
         user_data: dict[str, Any] = {
@@ -62,11 +116,9 @@ def register(validated: Usuario):
             "gener": validated.gener,
         }
 
-        # Crear usuario usando el ORM
         user_model = get_user_model()
         created_user = user_model.create(user_data)
 
-        # Crear token para el usuario recién registrado
         token_data: dict[str, Any] = {
             "id": created_user["id"],
             "username": created_user["username"],
@@ -77,7 +129,7 @@ def register(validated: Usuario):
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
                 "message": "Usuario registrado exitosamente",
                 "data": {
                     "user": {
@@ -93,34 +145,76 @@ def register(validated: Usuario):
         ), 201
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/login", methods=["POST"])
-def login():
-    """Inicia sesión de usuario"""
+def login() -> tuple[Response, int] | Response:
+    """
+    Inicia sesión de usuario y devuelve un token de autenticación.
+    ---
+    tags:
+      - Autenticación
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email del usuario.
+                example: "test@example.com"
+              password:
+                type: string
+                description: Contraseña del usuario.
+                example: "strongpassword123"
+            required:
+              - email
+              - password
+    responses:
+      200:
+        description: Login exitoso.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: success
+                message:
+                  type: string
+                  example: Login exitoso
+                data:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                    user:
+                      $ref: '#/components/schemas/Usuario'
+      400:
+        description: Datos inválidos.
+      401:
+        description: Credenciales inválidas.
+    """
     try:
         data = request.get_json()
 
         if not data:
-            return jsonify({"type": "error", "message": "No se proporcionaron datos"}), 400
+            return jsonify({"type": ResponseType.WARNING, "message": "No se proporcionaron datos"}), 400
 
         email = data.get("email")
         password = data.get("password")
 
         if not email or not password:
-            return jsonify({"type": "error", "message": "Email y contraseña son requeridos"}), 400
+            return jsonify({"type": ResponseType.WARNING, "message": "Email y contraseña son requeridos"}), 400
 
-        # Buscar usuario por email
         user = find_user_by_email(email)
-        if not user:
-            return jsonify({"type": "error", "message": "Credenciales inválidas"}), 401
+        if not user or not verify_password(password, user["password"]):
+            return jsonify({"type": ResponseType.ERROR, "message": "Credenciales inválidas"}), 401
 
-        # Verificar contraseña
-        if not verify_password(password, user["password"]):
-            return jsonify({"type": "error", "message": "Credenciales inválidas"}), 401
-
-        # Crear token
         token_data: dict[str, Any] = {
             "id": user["id"],
             "username": user["username"],
@@ -131,7 +225,7 @@ def login():
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
                 "message": "Login exitoso",
                 "data": {
                     "user": {
@@ -147,33 +241,32 @@ def login():
         ), 200
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/logout", methods=["POST"])
-def logout():
+def logout() -> tuple[Response, int] | Response:
     """Cierra sesión de usuario (en este caso simple solo devuelve confirmación)"""
-    return jsonify({"type": "success", "message": "Logout exitoso"}), 200
+    return jsonify({"type": ResponseType.INFO, "message": "Logout exitoso"}), 200
 
 
 @auth_bp.route("/me", methods=["GET"])
 @auth_required
-def get_current_user(user: dict[str, Any]):
+def get_current_user(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtiene información del usuario actual basado en el token"""
     try:
-        # El decorador @auth_required ya validó el token y nos pasa user_data
         user_email = user.get("email")
         if not user_email:
-            return jsonify({"type": "error", "message": "Email no encontrado en el token"}), 400
+            return jsonify({"type": ResponseType.ERROR, "message": "Email no encontrado en el token"}), 400
 
-        # Buscar usuario actual en la base de datos
         current_user = find_user_by_email(user_email)
         if not current_user:
-            return jsonify({"type": "error", "message": "Usuario no encontrado"}), 404
+            return jsonify({"type": ResponseType.ERROR, "message": "Usuario no encontrado"}), 404
 
         return jsonify(
             {
-                "type": "success",
+                "type": ResponseType.SUCCESS,
+                "message": "Usuario obtenido exitosamente",
                 "data": {
                     "user": {
                         "id": current_user["id"],
@@ -189,19 +282,17 @@ def get_current_user(user: dict[str, Any]):
         ), 200
 
     except Exception as e:
-        return jsonify({"type": "error", "message": f"Error interno del servidor: {str(e)}"}), 500
+        return jsonify({"type": ResponseType.ERROR, "message": f"Error interno del servidor: {str(e)}"}), 500
 
 
 @auth_bp.route("/protected", methods=["GET"])
 @auth_required
-def protected_endpoint(user: dict[str, Any]):
+def protected_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Ejemplo de endpoint protegido que requiere autenticación"""
     return jsonify(
         {
-            "type": "success",
-            "message": (
-                f"Hola {user.get('username', 'Usuario')}, tienes acceso a este endpoint protegido!"
-            ),
+            "type": ResponseType.INFO,
+            "message": f"Hola {user.get('username', 'Usuario')}, tienes acceso a este endpoint protegido!",
             "data": {"user_id": user.get("id"), "rol": user.get("rol")},
         }
     ), 200
@@ -209,13 +300,12 @@ def protected_endpoint(user: dict[str, Any]):
 
 @auth_bp.route("/admin-only", methods=["GET"])
 @auth_required
-def admin_only_endpoint(user: dict[str, Any]):
+def admin_only_endpoint(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Ejemplo de endpoint que requiere rol de administrador"""
-    print(f"Usuario autenticado: {user.get('username')}, Rol: {user.get('rol')}")
     if user.get("rol") != "admin":
         return jsonify(
             {
-                "type": "error",
+                "type": ResponseType.DANGER,
                 "message": "Acceso denegado. Se requiere rol de administrador.",
                 "data": user,
             }
@@ -223,7 +313,7 @@ def admin_only_endpoint(user: dict[str, Any]):
 
     return jsonify(
         {
-            "type": "success",
+            "type": ResponseType.SUCCESS,
             "message": "Bienvenido al panel de administrador",
             "data": {"admin_info": "Información sensible solo para admins"},
         }

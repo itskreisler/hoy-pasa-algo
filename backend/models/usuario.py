@@ -27,6 +27,7 @@ class Usuario(BaseModel):
         default=None, description="Fecha de nacimiento del usuario en formato YYYY-MM-DD"
     )
     gener: Optional[Literal["M", "F"]] = Field(default=None, description="Género del usuario")
+    bio: Optional[str] = Field(default=None, max_length=500, description="Biografía del usuario")
 
     @field_validator("full_name")
     @classmethod

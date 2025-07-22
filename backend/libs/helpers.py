@@ -10,18 +10,6 @@ from enum import Enum
 import requests
 
 
-def generate_id(length: int = 32) -> str:
-    """Genera un ID único de longitud especificada usando un servicio externo o localmente"""
-    return secrets.token_hex(length // 2)
-    url = f"https://generate-secret.vercel.app/{length}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        secret = response.text.strip()
-        return secret
-    # Si no se puede obtener el ID desde el servicio externo, generar uno localmente
-    return secrets.token_hex(length // 2)  # Genera un ID hexadecimal de la longitud especificada
-
-
 def hash_password(password: str) -> str:
     """Hashea la contraseña usando SHA256"""
     if not password or not password.strip():
@@ -59,15 +47,37 @@ def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
 
         token = auth.replace("Bearer ", "")
 
-        # Usar la función decode_token
         error, user_data = decode_token(token)
         if error or not user_data:
             return jsonify({"type": "error", "message": "Token inválido"}), 401
 
-        # Pasar los datos del usuario a la función
-        return f(*args, user=user_data, **kwargs)
+        kwargs["user"] = user_data
+        return f(*args, **kwargs)
 
     return wrapper
+
+
+def auth_optional(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
+    @wraps(f)
+    def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
+        auth = request.headers.get("Authorization")
+        user_data = None
+        if auth and auth.startswith("Bearer "):
+            token = auth.replace("Bearer ", "")
+            error, user_data = decode_token(token)
+
+        kwargs["user"] = user_data
+        return f(*args, **kwargs)
+
+    return wrapper
+
+
+class ResponseType(str, Enum):
+    SUCCESS = "success"
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
+    DANGER = "danger"
 
 
 class Method(str, Enum):
@@ -78,60 +88,31 @@ class Method(str, Enum):
     DELETE = "DELETE"
 
 
-def validate(
-    modelo: type[BaseModel],
-    include: Sequence[str] | None = None,
-    exclude: Sequence[str] | None = None,
-):
+def validate(modelo: type[BaseModel]):
     """
     Decorador para validar datos entrantes usando Pydantic.
-    Puedes usar `include` para validar solo ciertos campos,
-    o `exclude` para omitir algunos. Si se usan ambos, `include` tiene prioridad.
     """
-
     def decorador(func: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
             try:
-                metodo = Method(request.method)
-
-                if metodo == Method.GET:
-                    data = request.args.to_dict()
-                elif metodo in [Method.POST, Method.PUT, Method.PATCH]:
-                    data = request.get_json() or request.form.to_dict()
-                else:
-                    return jsonify({"type": "error", "message": f"Unsupported method: {metodo}"})
-
-                # Aplicar include o exclude según lo recibido
-                if include:
-                    data = {k: v for k, v in data.items() if k in include}
-                elif exclude:
-                    data = {k: v for k, v in data.items() if k not in exclude}
-
+                data = request.get_json() or {}
                 validated = modelo.model_validate(data)
-
             except ValidationError as ve:
-                return jsonify(
-                    {
-                        "type": "warning",
-                        "message": [
-                            {
-                                "loc": err.get("loc", []),
-                                "msg": str(err.get("msg", "")),
-                                "type": str(err.get("type", "")),
-                            }
-                            for err in ve.errors()
-                        ],
-                    }
-                )
+                # Asegurarse de que el error sea siempre serializable
+                error_messages = [
+                    {"loc": err.get("loc", []), "msg": err.get("msg", "")} for err in ve.errors()
+                ]
+                return jsonify({
+                    "type": "validation_error",
+                    "message": "Error de validación",
+                    "errors": error_messages
+                }), 400
 
-            except Exception as e:
-                return jsonify({"type": "error", "message": str(e)})
-
-            return func(*args, validated=validated, **kwargs)
+            kwargs['validated'] = validated
+            return func(*args, **kwargs)
 
         return wrapper
-
     return decorador
 
 
