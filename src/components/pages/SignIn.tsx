@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '@src/stores/authStore'
+import { t } from '@src/i18n/config.i18n'
 
 const SignIn: React.FC = () => {
     const [email, setEmail] = useState('')
@@ -29,7 +30,7 @@ const SignIn: React.FC = () => {
             <main className="flex-grow flex items-center justify-center px-4 py-8">
                 <div className="form-container">
                     <div className="form-card">
-                        <h1 className="form-title">Iniciar Sesión</h1>
+                        <h1 className="form-title">{t('page.sign_in.title')}</h1>
                         
                         {error && (
                             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -40,7 +41,7 @@ const SignIn: React.FC = () => {
                         <form className="form-group" onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="email" className="form-label">
-                                    Correo Electrónico
+                                    {t('page.sign_in.email')}
                                 </label>
                                 <input 
                                     type="email" 
@@ -56,7 +57,7 @@ const SignIn: React.FC = () => {
                             </div>
                             <div>
                                 <label htmlFor="password" className="form-label">
-                                    Contraseña
+                                    {t('page.sign_in.password')}
                                 </label>
                                 <input 
                                     type="password" 
@@ -79,12 +80,12 @@ const SignIn: React.FC = () => {
                                         className="checkbox-input"
                                     />
                                     <label htmlFor="remember-me" className="checkbox-label">
-                                        Recordarme
+                                        {t('page.sign_in.remember_me')}
                                     </label>
                                 </div>
                                 <div className="text-sm">
                                     <a href="/forgot-password" className="link">
-                                        ¿Olvidaste tu contraseña?
+                                        {t('page.sign_in.forgot_password')}
                                     </a>
                                 </div>
                             </div>
@@ -93,7 +94,7 @@ const SignIn: React.FC = () => {
                                 className="btn-primary"
                                 disabled={loading}
                             >
-                                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                                {loading ? t('page.sign_in.logging_in') : t('page.sign_in.sign_in')}
                             </button>
                         </form>
                         <div className="form-divider">
@@ -118,9 +119,9 @@ const SignIn: React.FC = () => {
                             </div>
                         </div>
                         <p className="mt-6 form-text">
-                            ¿No tienes una cuenta? 
+                            {t('page.sign_in.dont_have_account')}
                             <a href="/sign-up" className="link">
-                                Regístrate aquí
+                                {t('page.sign_in.sign_up')}
                             </a>
                         </p>
                     </div>
