@@ -4,7 +4,7 @@ from typing import Optional, Literal
 
 class Evento(BaseModel):
     id: Optional[str] = Field(default=None, description="ID único del evento")
-    user_id: str
+    user_id: Optional[str]
     title: str
     description: Optional[str] = None
     date: str

@@ -1,46 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { useAuthStore } from '@src/stores/authStore';
-import { useEventStore } from '@src/stores/eventStore';
-import { ProfileSkeleton } from '@src/components/ui';
-import { t } from '@src/i18n/config.i18n';
+import React, { useState, useEffect } from 'react'
+import { useAuthStore } from '@src/stores/authStore'
+import { useEventStore } from '@src/stores/eventStore'
+import { ProfileSkeleton } from '@src/components/ui'
+import { t } from '@src/i18n/config.i18n'
 
 const CreateEvent: React.FC = () => {
-    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore();
-    const { createEvent, loading: eventLoading, error: eventError } = useEventStore();
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
-    const [visibility, setVisibility] = useState('public');
-    const [success, setSuccess] = useState<string | null>(null);
+    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore()
+    const { createEvent, loading: eventLoading, error: eventError } = useEventStore()
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [date, setDate] = useState('')
+    const [visibility, setVisibility] = useState('public')
+    const [success, setSuccess] = useState<string | null>(null)
 
     useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+        checkAuth()
+    }, [checkAuth])
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSuccess(null);
+        e.preventDefault()
+        setSuccess(null)
 
         if (!isAuthenticated || !token) {
-            return;
+            return
         }
 
         try {
-            await createEvent({ title, description, date, visibility }, token);
-            setSuccess(t('page.create_event.success'));
-            setTitle('');
-            setDescription('');
-            setDate('');
-            setVisibility('public');
-        } catch (err) {
+            await createEvent({ title, description, date, visibility }, token)
+            setSuccess(t('page.create_event.success'))
+            setTitle('')
+            setDescription('')
+            setDate('')
+            setVisibility('public')
+        } catch  {
             // error is handled by the store
         }
-    };
+    }
 
-    const loading = authLoading || eventLoading;
+    const loading = authLoading || eventLoading
 
     if (loading || (isAuthenticated && !user)) {
-        return <ProfileSkeleton />;
+        return <ProfileSkeleton />
     }
 
     if (!isAuthenticated) {
@@ -62,7 +62,7 @@ const CreateEvent: React.FC = () => {
                     </div>
                 </div>
             </main>
-        );
+        )
     }
 
     return (
@@ -248,7 +248,7 @@ const CreateEvent: React.FC = () => {
                 </div>
             </div>
         </main>
-    );
-};
+    )
+}
 
-export default CreateEvent;
+export default CreateEvent

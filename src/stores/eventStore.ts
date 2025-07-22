@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-
+import { create } from 'zustand'
+import { useAuthStore } from './authStore'
 interface Event {
     id: string;
     title: string;
@@ -22,41 +22,41 @@ export const useEventStore = create<EventState>((set) => ({
     loading: false,
     error: null,
     fetchEvents: async () => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
-            const response = await fetch('http://localhost:5000/api/v1/events/');
+            const response = await fetch('http://localhost:5000/api/v1/events/')
             if (!response.ok) {
-                throw new Error('Failed to fetch events');
+                throw new Error('Failed to fetch events')
             }
-            const result = await response.json();
-            set({ events: result.data || [], loading: false });
+            const result = await response.json()
+            set({ events: result.data || [], loading: false })
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
         }
     },
     createEvent: async (eventData, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
             const response = await fetch('http://localhost:5000/api/v1/events/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(eventData)
-            });
+                body: JSON.stringify({ ...eventData, user_id: useAuthStore.getState().user?.id })
+            })
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error creating event');
+                const result = await response.json()
+                throw new Error(result.message || 'Error creating event')
             }
             // After creating an event, fetch all events again to update the list
-            const fetchResponse = await fetch('http://localhost:5000/api/v1/events/');
-            const fetchResult = await fetchResponse.json();
-            set({ events: fetchResult.data || [], loading: false });
+            const fetchResponse = await fetch('http://localhost:5000/api/v1/events/')
+            const fetchResult = await fetchResponse.json()
+            set({ events: fetchResult.data || [], loading: false })
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
-    },
-}));
+    }
+}))
