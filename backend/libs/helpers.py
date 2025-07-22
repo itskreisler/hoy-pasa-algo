@@ -92,6 +92,7 @@ def validate(modelo: type[BaseModel]):
     """
     Decorador para validar datos entrantes usando Pydantic.
     """
+
     def decorador(func: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
@@ -103,16 +104,20 @@ def validate(modelo: type[BaseModel]):
                 error_messages = [
                     {"loc": err.get("loc", []), "msg": err.get("msg", "")} for err in ve.errors()
                 ]
-                return jsonify({
-                    "type": "validation_error",
-                    "message": "Error de validación",
-                    "errors": error_messages
-                }), 400
+                print(ve.errors())
+                return jsonify(
+                    {
+                        "type": "validation_error",
+                        "message": "Error de validación",
+                        "errors": error_messages,
+                    }
+                ), 400
 
-            kwargs['validated'] = validated
+            kwargs["validated"] = validated
             return func(*args, **kwargs)
 
         return wrapper
+
     return decorador
 
 
