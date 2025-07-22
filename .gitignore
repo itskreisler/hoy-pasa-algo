@@ -27,4 +27,7 @@ pnpm-debug.log*
 .nox/
 __pycache__/
 
+# Ignorar todos los archivos de datos CSV
+backend/db/data/
 backend/db/data/*
+backend/db/data/**/*
