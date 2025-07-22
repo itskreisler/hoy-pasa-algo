@@ -1,0 +1,6 @@
+export { default as ProfileHeader } from './ProfileHeader'
+export { default as ProfileSidebar } from './ProfileSidebar'
+export { default as OverviewTab } from './OverviewTab'
+export { default as EventsTab } from './EventsTab'
+export { default as FavoritesTab } from './FavoritesTab'
+export { default as SettingsTab } from './SettingsTab'

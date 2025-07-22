@@ -1,26 +1,41 @@
 import { create } from 'zustand'
 import { useAuthStore } from './authStore'
+
 interface Event {
     id: string;
     title: string;
     description: string;
     date: string;
+    time?: string;
+    status: string;
     visibility: string;
+    category_id?: string;
+    city?: string;
+    country?: string;
+    image_url?: string;
+    link?: string;
     user_id: string;
 }
 
 interface EventState {
     events: Event[];
+    myEvents: Event[];
     loading: boolean;
+    myEventsLoading: boolean;
     error: string | null;
     fetchEvents: () => Promise<void>;
+    fetchMyEvents: (token: string) => Promise<void>;
     createEvent: (eventData: Omit<Event, 'id' | 'user_id'>, token: string) => Promise<void>;
+    clearMyEvents: () => void;
 }
 
 export const useEventStore = create<EventState>((set) => ({
     events: [],
+    myEvents: [],
     loading: false,
+    myEventsLoading: false,
     error: null,
+
     fetchEvents: async () => {
         set({ loading: true, error: null })
         try {
@@ -34,6 +49,31 @@ export const useEventStore = create<EventState>((set) => ({
             set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
         }
     },
+
+    fetchMyEvents: async (token: string) => {
+        set({ myEventsLoading: true, error: null })
+        try {
+            const response = await fetch('http://localhost:5000/api/v1/events/my-events', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch my events')
+            }
+
+            const result = await response.json()
+            set({ myEvents: result.data || [], myEventsLoading: false })
+        } catch (err) {
+            set({
+                error: err instanceof Error ? err.message : 'An unknown error occurred',
+                myEventsLoading: false
+            })
+        }
+    },
+
     createEvent: async (eventData, token) => {
         set({ loading: true, error: null })
         try {
@@ -58,5 +98,9 @@ export const useEventStore = create<EventState>((set) => ({
             set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
             throw err
         }
+    },
+
+    clearMyEvents: () => {
+        set({ myEvents: [], myEventsLoading: false })
     }
 }))
