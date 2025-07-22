@@ -5,7 +5,7 @@ from config import config
 from routes.users import users_bp
 from routes.events import events_bp
 from routes.auth import auth_bp
-from flasgger import Swagger
+from flasgger import Swagger  # type: ignore
 import os
 from typing import Optional, Dict, Any
 import mimetypes
@@ -60,7 +60,29 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     def serve_static(path: str) -> Response:
         if app.static_folder is None:
             return Response("Static folder not configured", status=500)
-        return send_from_directory(app.static_folder, path)
+
+        # Normalizar la ruta para evitar problemas con separadores
+        normalized_path: str = path.replace("\\", "/")
+
+        # Debug: imprimir la ruta solicitada
+        print(f"Requested path: {normalized_path}")
+        print(f"Static folder: {app.static_folder}")
+
+        # Primero intentar servir el archivo directamente
+        try:
+            print(f"Trying to serve file: {normalized_path}")
+            return send_from_directory(app.static_folder, normalized_path)
+        except Exception as e:
+            print(f"Direct file serve failed: {e}")
+
+            # Si falla, intentar servir index.html del directorio
+            index_path: str = f"{normalized_path}/index.html"
+            try:
+                print(f"Trying to serve index: {index_path}")
+                return send_from_directory(app.static_folder, index_path)
+            except Exception as e:
+                print(f"Index file serve failed: {e}")
+                return Response("File not found", status=404)
 
     @app.route("/docs")
     def api_info() -> Dict[str, Any]:
@@ -70,6 +92,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
                 "users": "/api/v1/users",
                 "events": "/api/v1/events",
                 "auth": "/api/v1/auth",
+                "docs": "/api/docs/",
             },
         }
 
