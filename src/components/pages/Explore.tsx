@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useEventStore } from '@src/stores/eventStore';
-import { t } from '@src/i18n/config.i18n';
+import React, { useState, useEffect, useMemo } from 'react'
+import { useEventStore } from '@src/stores/eventStore'
+import { t } from '@src/i18n/config.i18n'
 
 const Explore: React.FC = () => {
-    const { events, loading, error, fetchEvents } = useEventStore();
-    const [searchTerm, setSearchTerm] = useState('');
+    const { events, loading, error, fetchEvents } = useEventStore()
+    const [searchTerm, setSearchTerm] = useState('')
 
     useEffect(() => {
-        fetchEvents();
-    }, [fetchEvents]);
+        fetchEvents()
+    }, [fetchEvents])
 
     const filteredEvents = useMemo(() => {
         return events.filter(event =>
             event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             event.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [events, searchTerm]);
+        )
+    }, [events, searchTerm])
 
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
             </div>
-        );
+        )
     }
 
     if (error) {
@@ -30,7 +30,7 @@ const Explore: React.FC = () => {
             <div className="text-center py-10">
                 <p className="text-red-500">{error}</p>
             </div>
-        );
+        )
     }
 
     return (
@@ -82,7 +82,7 @@ const Explore: React.FC = () => {
                 </div>
             </div>
         </main>
-    );
-};
+    )
+}
 
-export default Explore;
+export default Explore

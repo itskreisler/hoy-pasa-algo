@@ -45,14 +45,14 @@ export const es = {
                 private: 'Privado',
                 only_me: 'Solo yo',
                 create_event: 'Crear Evento',
-                creating: 'Creando...',
+                creating: 'Creando...'
             }
         },
         explore: {
             title: 'Explorar Eventos',
             search_placeholder: 'Buscar eventos...',
             no_events_found: 'No se encontraron eventos.',
-            date: 'Fecha:',
+            date: 'Fecha:'
         },
         profile: {
             title: 'Mi Perfil',
@@ -79,7 +79,7 @@ export const es = {
             token: 'Token',
             not_available: 'No disponible',
             authenticated: 'Autenticado',
-            not_authenticated: 'No autenticado',
+            not_authenticated: 'No autenticado'
         },
         sign_in: {
             title: 'Iniciar Sesión',
@@ -90,7 +90,7 @@ export const es = {
             sign_in: 'Iniciar Sesión',
             logging_in: 'Iniciando Sesión...',
             dont_have_account: '¿No tienes una cuenta?',
-            sign_up: 'Regístrate',
+            sign_up: 'Regístrate'
         },
         sign_up: {
             title: 'Crear una cuenta',
@@ -101,7 +101,7 @@ export const es = {
             sign_up: 'Registrarse',
             registering: 'Registrando...',
             already_have_account: '¿Ya tienes una cuenta?',
-            sign_in: 'Inicia Sesión',
+            sign_in: 'Inicia Sesión'
         }
     },
     footer: {
