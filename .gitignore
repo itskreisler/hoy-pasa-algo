@@ -26,3 +26,5 @@ pnpm-debug.log*
 .venv/
 .nox/
 __pycache__/
+
+backend/db/data/*
