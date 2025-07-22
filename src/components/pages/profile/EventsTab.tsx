@@ -98,10 +98,10 @@ const EventsTab: React.FC = () => {
                                 {/* Actions */}
                                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                                     <div className="flex justify-end space-x-2">
-                                        <button className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                                        <button onClick={() => alert('Esta accion aun no esta disponible')} className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                                             Editar
                                         </button>
-                                        <button disabled className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors">
+                                        <button onClick={() => alert('Esta accion aun no esta disponible')} className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors">
                                             Eliminar
                                         </button>
                                         {event.link && (

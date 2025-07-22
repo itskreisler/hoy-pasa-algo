@@ -47,36 +47,6 @@ const SettingsTab: React.FC = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Preferencias */}
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                        <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100-4m0 4v2m0-6V4" />
-                            </svg>
-                            Preferencias
-                        </h4>
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Notificaciones por email</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Recibir notificaciones sobre eventos</p>
-                                </div>
-                                <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1"></span>
-                                </button>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Perfil público</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Permitir que otros vean tu perfil</p>
-                                </div>
-                                <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     
                     {/* Zona de Peligro */}
                     <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
