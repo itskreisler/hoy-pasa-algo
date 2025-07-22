@@ -2,11 +2,11 @@
 import Layout from "@src/layouts/Layout.astro";
 import Header from "@src/components/global/Header.astro";
 import FooterSection from "@src/components/sections/FooterSection.astro";
-import CreateEvent from "@src/components/pages/CreateEvent";
+import CreateEventForm from "@src/components/pages/CreateEvent";
 ---
 
 <Layout>
   <Header />
-  <CreateEvent client:load />
+  <CreateEventForm client:load />
   <FooterSection />
 </Layout>

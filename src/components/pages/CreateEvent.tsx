@@ -76,7 +76,7 @@ const CreateEvent: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="md:col-span-2">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.title')}
+                                {t('page.create_event.form.title')} <span className="text-red-500">{t('page.create_event.form.required_field')}</span>
                             </label>
                             <input
                                 type="text"
@@ -84,25 +84,27 @@ const CreateEvent: React.FC = () => {
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 required
+                                aria-required="true"
                                 className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             />
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.description')}
+                                {t('page.create_event.form.description')} <span className="text-red-500">{t('page.create_event.form.required_field')}</span>
                             </label>
                             <textarea
                                 id="description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
+                                aria-required="true"
                                 rows={4}
                                 className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.date')}
+                                {t('page.create_event.form.date')} <span className="text-red-500">{t('page.create_event.form.required_field')}</span>
                             </label>
                             <input
                                 type="date"
@@ -110,49 +112,58 @@ const CreateEvent: React.FC = () => {
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
                                 required
+                                aria-required="true"
                                 className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="time" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.time')}
+                                {t('page.create_event.form.time')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <input
                                 type="time"
                                 id="time"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.time')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.country')}
+                                {t('page.create_event.form.country')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <input
                                 type="text"
                                 id="country"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.country')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.city')}
+                                {t('page.create_event.form.city')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <input
                                 type="text"
                                 id="city"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.city')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.category')}
+                                {t('page.create_event.form.category')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <select
                                 id="category"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.category')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             >
                                 <option>Category 1</option>
@@ -161,11 +172,13 @@ const CreateEvent: React.FC = () => {
                         </div>
                         <div>
                             <label htmlFor="subcategory" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.subcategory')}
+                                {t('page.create_event.form.subcategory')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <select
                                 id="subcategory"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.subcategory')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             >
                                 <option>Subcategory 1</option>
@@ -174,57 +187,66 @@ const CreateEvent: React.FC = () => {
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="hashtags" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.hashtags')}
+                                {t('page.create_event.form.hashtags')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <input
                                 type="text"
                                 id="hashtags"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.hashtags')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.image_url')}
+                                {t('page.create_event.form.image_url')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
                             </label>
                             <input
                                 type="text"
                                 id="image_url"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.image_url')} - ${t('page.create_event.form.field_not_available')}`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="link" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.link')}
+                                {t('page.create_event.form.link')} <span className="text-gray-400 text-xs">(No disponible)</span>
                             </label>
                             <input
                                 type="text"
                                 id="link"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.link')} - Campo no disponible`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="calendar" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.calendar')}
+                                {t('page.create_event.form.calendar')} <span className="text-gray-400 text-xs">(No disponible)</span>
                             </label>
                             <input
                                 type="text"
                                 id="calendar"
                                 disabled
+                                aria-disabled="true"
+                                aria-label={`${t('page.create_event.form.calendar')} - Campo no disponible`}
                                 className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
                             />
                         </div>
                         <div>
                             <label htmlFor="visibility" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.visibility')}
+                                {t('page.create_event.form.visibility')} <span className="text-red-500">*</span>
                             </label>
                             <select
                                 id="visibility"
                                 value={visibility}
                                 onChange={(e) => setVisibility(e.target.value)}
                                 required
+                                aria-required="true"
                                 className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             >
                                 <option value="public">{t('page.create_event.form.public')}</option>

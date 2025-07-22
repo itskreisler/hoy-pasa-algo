@@ -1,13 +1,11 @@
 from flask import request, jsonify, Response
 from functools import wraps
 from pydantic import BaseModel, ValidationError
-from typing import Callable, Any, Union, Sequence
+from typing import Callable, Any, Union
 import base64
 import json
 import hashlib
-import secrets
 from enum import Enum
-import requests
 
 
 def hash_password(password: str) -> str:
@@ -24,15 +22,15 @@ def verify_password(password: str, hashed: str) -> bool:
 
 def create_token(user_data: dict[str, Any]) -> str:
     """Crea un token simple usando base64 (en producción usa JWT)"""
-    token_data = json.dumps(user_data)
+    token_data: str = json.dumps(user_data)
     return base64.b64encode(token_data.encode()).decode()
 
 
 def decode_token(token: str) -> tuple[Exception | None, dict[str, Any] | None]:
     """Decodifica un token y devuelve los datos del usuario"""
     try:
-        decoded_data = base64.b64decode(token.encode())
-        user_data = json.loads(decoded_data.decode())
+        decoded_data: bytes = base64.b64decode(token.encode())
+        user_data: dict[str, Any] = json.loads(decoded_data.decode())
         return (None, user_data)
     except Exception as e:
         return (e, None)
@@ -41,12 +39,14 @@ def decode_token(token: str) -> tuple[Exception | None, dict[str, Any] | None]:
 def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
     @wraps(f)
     def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
-        auth = request.headers.get("Authorization")
+        auth: str | None = request.headers.get("Authorization")
         if not auth or not auth.startswith("Bearer "):
             return jsonify({"type": "error", "message": "Token de autorización requerido"}), 401
 
-        token = auth.replace("Bearer ", "")
+        token: str = auth.replace("Bearer ", "")
 
+        error: Exception | None
+        user_data: dict[str, Any] | None
         error, user_data = decode_token(token)
         if error or not user_data:
             return jsonify({"type": "error", "message": "Token inválido"}), 401
@@ -60,11 +60,11 @@ def auth_required(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
 def auth_optional(f: Callable[..., Any]) -> Callable[..., Union[Response, Any]]:
     @wraps(f)
     def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
-        auth = request.headers.get("Authorization")
-        user_data = None
+        auth: str | None = request.headers.get("Authorization")
+        user_data: dict[str, Any] | None = None
         if auth and auth.startswith("Bearer "):
-            token = auth.replace("Bearer ", "")
-            error, user_data = decode_token(token)
+            token: str = auth.replace("Bearer ", "")
+            _, user_data = decode_token(token)  # Ignoramos el error en auth_optional
 
         kwargs["user"] = user_data
         return f(*args, **kwargs)
@@ -97,12 +97,17 @@ def validate(modelo: type[BaseModel]):
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Union[Response, Any]:
             try:
-                data = request.get_json() or {}
-                validated = modelo.model_validate(data)
+                data: dict[str, Any] = request.get_json() or {}
+                validated: BaseModel = modelo.model_validate(data)
             except ValidationError as ve:
                 # Asegurarse de que el error sea siempre serializable
-                error_messages = [
-                    {"loc": err.get("loc", []), "msg": err.get("msg", "")} for err in ve.errors()
+                error_messages: list[dict[str, Any]] = [
+                    {
+                        "loc": list(err.get("loc", [])),
+                        "msg": str(err.get("msg", "")),
+                        "type": str(err.get("type", "")),
+                    }
+                    for err in ve.errors()
                 ]
                 print(ve.errors())
                 return jsonify(
@@ -122,9 +127,9 @@ def validate(modelo: type[BaseModel]):
 
 
 def tryExcept(func: Callable[..., Any], *args: Any, **kwargs: Any) -> tuple[Exception | None, Any]:
-    """Función para manejar excepciones y devolver una tupla (rror, data)"""
+    """Función para manejar excepciones y devolver una tupla (error, data)"""
     try:
-        data = func(*args, **kwargs)
+        data: Any = func(*args, **kwargs)
         return (None, data)
     except Exception as e:
         return (e, None)

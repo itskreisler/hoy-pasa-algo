@@ -45,7 +45,10 @@ export const es = {
                 private: 'Privado',
                 only_me: 'Solo yo',
                 create_event: 'Crear Evento',
-                creating: 'Creando...'
+                creating: 'Creando...',
+                required_field: '*',
+                not_available: 'No disponible',
+                field_not_available: 'Campo no disponible'
             }
         },
         explore: {

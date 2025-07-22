@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, Response
-from typing import Any, List
+from typing import Any
 from db.ORMcsv import orm
 from models.evento import Evento, Category, Favorite
 from libs.helpers import (
@@ -36,9 +36,9 @@ def filter_active_events(
     2. archived -> Solo si include_archived=True
     3. activo (sin status) -> Siempre se muestra
     """
-    filtered_events = []
+    filtered_events: list[dict[str, Any]] = []
     for event in events:
-        status = event.get("status")
+        status: str | None = event.get("status")
 
         # PRIORIDAD 1: Nunca mostrar eventos eliminados
         if status == "deleted":
@@ -62,11 +62,11 @@ def get_event_with_status_check(
     - allow_deleted: Si True, permite obtener eventos eliminados
     - allow_archived: Si True, permite obtener eventos archivados
     """
-    event = evento_model.find_by_id(event_id)
+    event: dict[str, Any] | None = evento_model.find_by_id(event_id)
     if not event:
         return None
 
-    status = event.get("status")
+    status: str | None = event.get("status")
 
     if status == "deleted" and not allow_deleted:
         return None
@@ -114,15 +114,17 @@ def get_events(user: dict[str, Any] | None) -> tuple[Response, int] | Response:
                     $ref: '#/components/schemas/Evento'
     """
     try:
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per_page", 10, type=int)
-        include_archived = request.args.get("include_archived", "false").lower() == "true"
+        page: int = request.args.get("page", 1, type=int)
+        per_page: int = request.args.get("per_page", 10, type=int)
+        include_archived: bool = request.args.get("include_archived", "false").lower() == "true"
 
-        all_events = evento_model.find_all()
-        active_events = filter_active_events(all_events, include_archived=include_archived)
+        all_events: list[dict[str, Any]] = evento_model.find_all()
+        active_events: list[dict[str, Any]] = filter_active_events(
+            all_events, include_archived=include_archived
+        )
 
-        visible_events = []
-        user_id = user.get("id") if user else None
+        visible_events: list[dict[str, Any]] = []
+        user_id: str | None = user.get("id") if user else None
 
         for event in active_events:
             if event.get("visibility") == "public":
@@ -131,10 +133,10 @@ def get_events(user: dict[str, Any] | None) -> tuple[Response, int] | Response:
                 if event.get("visibility") in ["private", "only_me"]:
                     visible_events.append(event)
 
-        total = len(visible_events)
-        start_idx = (page - 1) * per_page
-        end_idx = start_idx + per_page
-        paginated_events = visible_events[start_idx:end_idx]
+        total: int = len(visible_events)
+        start_idx: int = (page - 1) * per_page
+        end_idx: int = start_idx + per_page
+        paginated_events: list[dict[str, Any]] = visible_events[start_idx:end_idx]
 
         return jsonify(
             {
@@ -383,30 +385,31 @@ def get_my_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
 def search_events() -> tuple[Response, int] | Response:
     """Buscar eventos por título, descripción o ubicación"""
     try:
-        query = request.args.get("q", "").lower().strip()
+        query: str = request.args.get("q", "").lower().strip()
         if not query:
             return jsonify(
                 {"type": ResponseType.WARNING, "message": "Parámetro de búsqueda requerido: q"}
             ), 400
 
-        all_events = evento_model.find_all()
+        all_events: list[dict[str, Any]] = evento_model.find_all()
         filtered_events: list[dict[str, Any]] = []
 
         for event in all_events:
-            title = str(event.get("title") or "").lower()
-            description = str(event.get("description") or "").lower()
-            city = str(event.get("city") or "").lower()
-            country = str(event.get("country") or "").lower()
+            title: str = str(event.get("title") or "").lower()
+            description: str = str(event.get("description") or "").lower()
+            city: str = str(event.get("city") or "").lower()
+            country: str = str(event.get("country") or "").lower()
 
             if query in title or query in description or query in city or query in country:
                 filtered_events.append(event)
 
+        total_found: int = len(filtered_events)
         return jsonify(
             {
                 "type": ResponseType.SUCCESS,
-                "message": f"Se encontraron {len(filtered_events)} eventos para la búsqueda '{query}'",
+                "message": f"Se encontraron {total_found} eventos para la búsqueda '{query}'",
                 "data": filtered_events,
-                "total": len(filtered_events),
+                "total": total_found,
                 "query": query,
             }
         )
@@ -551,17 +554,19 @@ def get_category(category_id: str) -> tuple[Response, int] | Response:
 def add_favorite(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Agregar un evento a favoritos"""
     try:
-        data = request.get_json()
+        data: dict[str, Any] | None = request.get_json()
         if not data or not data.get("event_id"):
             return jsonify({"type": ResponseType.WARNING, "message": "event_id es requerido"}), 400
 
-        event_id = data["event_id"]
-        event = evento_model.find_by_id(event_id)
+        event_id: str = data["event_id"]
+        event: dict[str, Any] | None = evento_model.find_by_id(event_id)
         if not event:
             return jsonify({"type": ResponseType.ERROR, "message": "Evento no encontrado"}), 404
 
-        user_favorites = favorite_model.find_by_field("user_id", str(user["id"]))
-        existing_favorite = next(
+        user_favorites: list[dict[str, Any]] = favorite_model.find_by_field(
+            "user_id", str(user["id"])
+        )
+        existing_favorite: dict[str, Any] | None = next(
             (fav for fav in user_favorites if fav["event_id"] == event_id), None
         )
         if existing_favorite:
@@ -569,8 +574,8 @@ def add_favorite(user: dict[str, Any]) -> tuple[Response, int] | Response:
                 {"type": ResponseType.WARNING, "message": "El evento ya está en favoritos"}
             ), 400
 
-        favorite_data = {"user_id": str(user["id"]), "event_id": event_id}
-        new_favorite = favorite_model.create(favorite_data)
+        favorite_data: dict[str, str] = {"user_id": str(user["id"]), "event_id": event_id}
+        new_favorite: dict[str, Any] = favorite_model.create(favorite_data)
         return jsonify(
             {
                 "type": ResponseType.SUCCESS,
@@ -589,18 +594,22 @@ def add_favorite(user: dict[str, Any]) -> tuple[Response, int] | Response:
 def get_user_favorites(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtener favoritos del usuario actual"""
     try:
-        user_favorites = favorite_model.find_by_field("user_id", str(user["id"]))
-        favorite_events = []
+        user_favorites: list[dict[str, Any]] = favorite_model.find_by_field(
+            "user_id", str(user["id"])
+        )
+        favorite_events: list[dict[str, Any]] = []
         for fav in user_favorites:
-            event = evento_model.find_by_id(fav["event_id"])
+            event: dict[str, Any] | None = evento_model.find_by_id(fav["event_id"])
             if event:
                 favorite_events.append({"favorite_id": fav["id"], "event": event})
+
+        total_favorites: int = len(favorite_events)
         return jsonify(
             {
                 "type": ResponseType.SUCCESS,
                 "message": "Favoritos obtenidos exitosamente",
                 "data": favorite_events,
-                "total": len(favorite_events),
+                "total": total_favorites,
             }
         )
     except Exception as e:
@@ -722,7 +731,7 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
     También borra en CASCADA todos los favoritos relacionados.
     """
     try:
-        existing_event = evento_model.find_by_id(event_id)
+        existing_event: dict[str, Any] | None = evento_model.find_by_id(event_id)
         if not existing_event:
             return jsonify({"type": ResponseType.ERROR, "message": "Evento no encontrado"}), 404
 
@@ -734,12 +743,12 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
                 }
             ), 403
 
-        user_favorites = favorite_model.find_by_field("event_id", event_id)
-        favorites_count = len(user_favorites)
+        user_favorites: list[dict[str, Any]] = favorite_model.find_by_field("event_id", event_id)
+        favorites_count: int = len(user_favorites)
         for fav in user_favorites:
             favorite_model.delete_by_id(fav["id"])
 
-        success = evento_model.delete_by_id(event_id)
+        success: bool = evento_model.delete_by_id(event_id)
         if success:
             return jsonify(
                 {
@@ -766,15 +775,20 @@ def hard_delete_event(event_id: str, user: dict[str, Any]) -> tuple[Response, in
 def get_deleted_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtener eventos eliminados (soft delete) del usuario actual - Solo propietario"""
     try:
-        user_events = evento_model.find_by_field("user_id", str(user["id"]))
-        deleted_events = [e for e in user_events if e.get("status") == "deleted"]
+        user_events: list[dict[str, Any]] = evento_model.find_by_field("user_id", str(user["id"]))
+        deleted_events: list[dict[str, Any]] = [
+            e for e in user_events if e.get("status") == "deleted"
+        ]
+        total_deleted: int = len(deleted_events)
         return jsonify(
             {
                 "type": ResponseType.SUCCESS,
                 "message": "Eventos eliminados obtenidos exitosamente",
                 "data": deleted_events,
-                "total": len(deleted_events),
-                "info": "Estos eventos están eliminados (soft delete) y no son visibles públicamente",
+                "total": total_deleted,
+                "info": (
+                    "Estos eventos están eliminados (soft delete) y no son visibles públicamente"
+                ),
             }
         )
     except Exception as e:
@@ -788,14 +802,17 @@ def get_deleted_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
 def get_archived_events(user: dict[str, Any]) -> tuple[Response, int] | Response:
     """Obtener eventos archivados del usuario actual"""
     try:
-        user_events = evento_model.find_by_field("user_id", str(user["id"]))
-        archived_events = [e for e in user_events if e.get("status") == "archived"]
+        user_events: list[dict[str, Any]] = evento_model.find_by_field("user_id", str(user["id"]))
+        archived_events: list[dict[str, Any]] = [
+            e for e in user_events if e.get("status") == "archived"
+        ]
+        total_archived: int = len(archived_events)
         return jsonify(
             {
                 "type": ResponseType.SUCCESS,
                 "message": "Eventos archivados obtenidos exitosamente",
                 "data": archived_events,
-                "total": len(archived_events),
+                "total": total_archived,
                 "info": "Eventos archivados - pueden ser restaurados",
             }
         )
