@@ -5,6 +5,7 @@ from config import config
 from routes.users import users_bp
 from routes.events import events_bp
 from routes.auth import auth_bp
+from routes.upload import upload_bp
 from flasgger import Swagger  # type: ignore
 import os
 from typing import Optional, Dict, Any
@@ -46,6 +47,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     app.register_blueprint(users_bp)
     app.register_blueprint(events_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(upload_bp)
 
     # Configurar rutas estáticas
     # dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "static"))
