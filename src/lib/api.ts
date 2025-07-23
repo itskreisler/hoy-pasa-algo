@@ -1,5 +1,5 @@
 // Configuración de la API
-const API_BASE_URL = 'http://localhost:5000'
+import { API_BASE_URL, API_VERSION } from '@src/config/api'
 
 // Interfaces
 interface ApiResponse<T = any> {
@@ -36,7 +36,7 @@ async function apiRequest<T>(
     endpoint: string,
     options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-    const url = `${API_BASE_URL}/api/v1${endpoint}`
+    const url = `${API_BASE_URL}/api/${API_VERSION}${endpoint}`
 
     const defaultHeaders = {
         'Content-Type': 'application/json'

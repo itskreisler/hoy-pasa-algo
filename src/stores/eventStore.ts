@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { useAuthStore } from './authStore'
+import { ENDPOINTS } from '@src/config/api'
 
 interface Event {
     id: string;
@@ -39,7 +40,7 @@ export const useEventStore = create<EventState>((set) => ({
     fetchEvents: async () => {
         set({ loading: true, error: null })
         try {
-            const response = await fetch('http://localhost:5000/api/v1/events/')
+            const response = await fetch(ENDPOINTS.events.base)
             if (!response.ok) {
                 throw new Error('Failed to fetch events')
             }
@@ -53,7 +54,7 @@ export const useEventStore = create<EventState>((set) => ({
     fetchMyEvents: async (token: string) => {
         set({ myEventsLoading: true, error: null })
         try {
-            const response = await fetch('http://localhost:5000/api/v1/events/my-events', {
+            const response = await fetch(ENDPOINTS.events.myEvents, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ export const useEventStore = create<EventState>((set) => ({
     createEvent: async (eventData, token) => {
         set({ loading: true, error: null })
         try {
-            const response = await fetch('http://localhost:5000/api/v1/events/', {
+            const response = await fetch(ENDPOINTS.events.base, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export const useEventStore = create<EventState>((set) => ({
                 throw new Error(result.message || 'Error creating event')
             }
             // After creating an event, fetch all events again to update the list
-            const fetchResponse = await fetch('http://localhost:5000/api/v1/events/')
+            const fetchResponse = await fetch(ENDPOINTS.events.base)
             const fetchResult = await fetchResponse.json()
             set({ events: fetchResult.data || [], loading: false })
 

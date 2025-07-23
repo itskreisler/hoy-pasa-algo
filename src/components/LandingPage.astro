@@ -3,7 +3,7 @@ import Header from "@src/components/global/Header.astro";
 import FeaturedEventsSection from "@src/components/sections/FeaturedEventsSection.astro";
 import HeroSection from "@src/components/sections/HeroSection.astro";
 import UpcomingEventsSection from "@src/components/sections/UpcomingEventsSection.tsx";
-import StatisticsSection from "@src/components/sections/StatisticsSection.astro";
+import StatisticsSection from "@src/components/react/StatisticsSection.tsx";
 import FooterSection from "@src/components/sections/FooterSection.astro";
 ---
 
@@ -18,6 +18,6 @@ import FooterSection from "@src/components/sections/FooterSection.astro";
 		<UpcomingEventsSection client:load />
 	</div>
 
-	<StatisticsSection />
+	<StatisticsSection client:load />
 </main>
 <FooterSection />

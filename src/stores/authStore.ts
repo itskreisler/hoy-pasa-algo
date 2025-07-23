@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-
-// Configuración de la API
-const API_BASE_URL = 'http://localhost:5000'
+import { ENDPOINTS } from '@src/config/api'
 
 // Interfaces TypeScript
 interface User {
@@ -62,7 +60,7 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     set({ loading: true, error: null })
 
-                    const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+                    const response = await fetch(ENDPOINTS.auth.login, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -100,7 +98,7 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     set({ loading: true, error: null })
 
-                    const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+                    const response = await fetch(ENDPOINTS.auth.register, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -158,7 +156,7 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     set({ loading: true })
 
-                    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+                    const response = await fetch(ENDPOINTS.auth.me, {
                         method: 'GET',
                         headers: {
                             Authorization: `Bearer ${token}`,
