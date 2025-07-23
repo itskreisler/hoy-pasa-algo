@@ -115,7 +115,7 @@ def get_events(user: dict[str, Any] | None) -> tuple[Response, int] | Response:
     """
     try:
         page: int = request.args.get("page", 1, type=int)
-        per_page: int = request.args.get("per_page", 10, type=int)
+        per_page: int = request.args.get("per_page", 100, type=int)
         include_archived: bool = request.args.get("include_archived", "false").lower() == "true"
 
         all_events: list[dict[str, Any]] = evento_model.find_all()

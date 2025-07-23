@@ -32,7 +32,7 @@ const SettingsTab: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <label className="text-gray-600 dark:text-gray-400 font-medium">{t('page.profile.token')}:</label>
-                                <p className="text-gray-900 dark:text-gray-100 font-mono text-xs break-all mt-1 bg-white dark:bg-gray-800 p-2 rounded border">
+                                <p onClick={() => navigator.clipboard.writeText(token || '')} className="text-gray-900 dark:text-gray-100 font-mono text-xs break-all mt-1 bg-white dark:bg-gray-800 p-2 rounded border">
                                     {token ? `${token.substring(0, 30)}...` : t('page.profile.not_available')}
                                 </p>
                             </div>

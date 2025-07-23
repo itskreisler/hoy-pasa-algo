@@ -2,11 +2,11 @@
 import Layout from "@src/layouts/Layout.astro";
 import Header from "@src/components/global/Header.astro";
 import FooterSection from "@src/components/sections/FooterSection.astro";
-import Explore from "@src/components/pages/Explore.tsx";
+import ExploreComponent from "@src/components/pages/Explore";
 ---
 
 <Layout>
   <Header />
-  <Explore client:load />
+  <ExploreComponent client:load />
   <FooterSection />
 </Layout>
