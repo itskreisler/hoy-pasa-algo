@@ -1,10 +1,10 @@
 ---
-import Header from "./global/Header.astro";
-import FeaturedEventsSection from "./sections/FeaturedEventsSection.astro";
-import HeroSection from "./sections/HeroSection.astro";
-import UpcomingEventsSection from "./sections/UpcomingEventsSection.astro";
-import StatisticsSection from "./sections/StatisticsSection.astro";
-import FooterSection from "./sections/FooterSection.astro";
+import Header from "@src/components/global/Header.astro";
+import FeaturedEventsSection from "@src/components/sections/FeaturedEventsSection.astro";
+import HeroSection from "@src/components/sections/HeroSection.astro";
+import UpcomingEventsSection from "@src/components/sections/UpcomingEventsSection.tsx";
+import StatisticsSection from "@src/components/sections/StatisticsSection.astro";
+import FooterSection from "@src/components/sections/FooterSection.astro";
 ---
 
 <Header />
@@ -15,7 +15,7 @@ import FooterSection from "./sections/FooterSection.astro";
 		class="container mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 md:p-6 lg:py-10"
 	>
 		<HeroSection />
-		<UpcomingEventsSection />
+		<UpcomingEventsSection client:load />
 	</div>
 
 	<StatisticsSection />

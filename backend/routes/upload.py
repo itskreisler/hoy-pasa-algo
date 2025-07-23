@@ -4,6 +4,7 @@ from werkzeug.datastructures import FileStorage
 import os
 from typing import List, Any, Tuple
 from datetime import datetime
+from libs.helpers import ResponseType
 
 # Blueprint para subida de archivos
 upload_bp: Blueprint = Blueprint("upload", __name__, url_prefix="/api/v1/upload")
@@ -40,14 +41,30 @@ def upload_file() -> Tuple[Any, int]:
         schema:
           type: object
           properties:
+            type:
+              type: string
+              enum: ["success"]
             message:
               type: string
-            urls:
-              type: array
-              items:
-                type: string
+            data:
+              type: object
+              properties:
+                urls:
+                  type: array
+                  items:
+                    type: string
+                count:
+                  type: integer
       400:
         description: Error en la solicitud.
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: ["error"]
+            message:
+              type: string
     """
     print("Request received at /upload", request.files)
 
@@ -59,13 +76,15 @@ def upload_file() -> Tuple[Any, int]:
 
     if not all_files:
         print("No files found in request")
-        return jsonify({"message": "No se encontraron archivos en la solicitud"}), 400
+        return jsonify(
+            {"type": ResponseType.ERROR, "message": "No se encontraron archivos en la solicitud"}
+        ), 400
 
     files: List[FileStorage] = all_files
     print(f"Files received: {files}")
     if not files or all(f.filename == "" for f in files):
         print("No files selected")
-        return jsonify({"message": "No se seleccionaron archivos"}), 400
+        return jsonify({"type": ResponseType.ERROR, "message": "No se seleccionaron archivos"}), 400
 
     uploaded_urls: List[str] = []
     for file in files:
@@ -89,7 +108,9 @@ def upload_file() -> Tuple[Any, int]:
 
             # Verificar que static_folder existe
             if current_app.static_folder is None:
-                return jsonify({"message": "Carpeta estática no configurada"}), 500
+                return jsonify(
+                    {"type": ResponseType.ERROR, "message": "Carpeta estática no configurada"}
+                ), 500
 
             # Asegurarse de que el directorio de subida existe
             upload_folder: str = os.path.join(current_app.static_folder, "media", "uploads")
@@ -105,13 +126,16 @@ def upload_file() -> Tuple[Any, int]:
 
     if not uploaded_urls:
         print("No valid files to upload")
-        return jsonify({"message": "Ningún archivo válido para subir"}), 400
+        return jsonify(
+            {"type": ResponseType.ERROR, "message": "Ningún archivo válido para subir"}
+        ), 400
 
     return (
         jsonify(
             {
+                "type": ResponseType.SUCCESS,
                 "message": "Archivos subidos exitosamente",
-                "urls": uploaded_urls,
+                "data": {"urls": uploaded_urls, "count": len(uploaded_urls)},
             }
         ),
         201,
@@ -141,6 +165,14 @@ def generate_qr() -> Tuple[Any, int]:
               format: binary
       400:
         description: Error en la solicitud.
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: ["error"]
+            message:
+              type: string
     """
     import qrcode
     from io import BytesIO
@@ -148,7 +180,7 @@ def generate_qr() -> Tuple[Any, int]:
 
     url: str | None = request.args.get("url")
     if not url:
-        return jsonify({"message": "No se proporcionó una URL"}), 400
+        return jsonify({"type": ResponseType.ERROR, "message": "No se proporcionó una URL"}), 400
 
     # Generar el código QR
     qr: Any = qrcode.QRCode(
