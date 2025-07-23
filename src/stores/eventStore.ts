@@ -25,7 +25,7 @@ interface EventState {
     error: string | null;
     fetchEvents: () => Promise<void>;
     fetchMyEvents: (token: string) => Promise<void>;
-    createEvent: (eventData: Omit<Event, 'id' | 'user_id'>, token: string) => Promise<void>;
+    createEvent: (eventData: Omit<Event, 'id' | 'user_id' | 'status'>, token: string) => Promise<void>;
     clearMyEvents: () => void;
 }
 

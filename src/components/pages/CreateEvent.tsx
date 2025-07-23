@@ -110,6 +110,7 @@ const CreateEvent: React.FC = () => {
                                 type="date"
                                 id="date"
                                 value={date}
+                                min={new Date().toISOString().split('T')[0]}
                                 onChange={(e) => setDate(e.target.value)}
                                 required
                                 aria-required="true"
