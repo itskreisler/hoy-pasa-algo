@@ -173,7 +173,9 @@ export const useEventStore = create<EventState>((set, get) => ({
             }
 
             const result = await response.json()
-            set({ favoriteEvents: result.data || [], favoritesLoading: false })
+            // Extraer solo los eventos de la estructura { event: {...}, favorite_id: "..." }
+            const favoriteEvents = result.data?.map((item: any) => item.event) || []
+            set({ favoriteEvents, favoritesLoading: false })
         } catch (err) {
             set({ error: err instanceof Error ? err.message : 'An unknown error occurred', favoritesLoading: false })
         }
