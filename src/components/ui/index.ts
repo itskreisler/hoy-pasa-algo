@@ -8,5 +8,8 @@ export { MobileMenuSkeleton, NavSkeleton } from './NavigationSkeleton'
 // Modal reutilizable
 export { Modal } from './Modal'
 
+// Modal para mostrar imágenes en tamaño completo
+export { ImageModal } from './ImageModal'
+
 // Componentes de evento
 export { EventDetails } from './EventDetails'

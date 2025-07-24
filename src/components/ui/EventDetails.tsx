@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { ImageModal } from './ImageModal'
 
 interface EventDetailsProps {
   event: any
 }
 
 export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+
   return (
     <>
       {/* Header con imagen si existe */}
       {event.image_url ? (
-        <div className="relative h-64 w-full">
+        <div className="relative h-64 w-full group">
           <img 
             src={event.image_url} 
             alt={event.title}
@@ -39,6 +42,20 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
             }`}>
               {event.visibility.charAt(0).toUpperCase() + event.visibility.slice(1)}
             </span>
+          </div>
+
+          {/* Botón Ver imagen completa */}
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={() => setIsImageModalOpen(true)}
+              className="px-3 py-1 text-sm font-medium rounded-full backdrop-blur-sm bg-black/50 hover:bg-black/70 text-white transition-colors duration-200 flex items-center space-x-2"
+              title="Ver imagen completa"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+              </svg>
+              <span>Ver completa</span>
+            </button>
           </div>
         </div>
       ) : (
@@ -213,6 +230,16 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
           </div>
         )}
       </div>
+
+      {/* Modal para imagen completa */}
+      {event.image_url && (
+        <ImageModal
+          imageUrl={event.image_url}
+          imageAlt={event.title}
+          isOpen={isImageModalOpen}
+          onClose={() => setIsImageModalOpen(false)}
+        />
+      )}
     </>
   )
 }
