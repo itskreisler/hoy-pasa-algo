@@ -52,6 +52,7 @@ const CreateEvent: React.FC = () => {
             setDescription('')
             setDate('')
             setVisibility('public')
+            setImageSource('url')
             setImageUrl('')
             setImageFile(null)
         } catch {
@@ -227,6 +228,7 @@ const CreateEvent: React.FC = () => {
                             </label>
                             <div className="mt-1 flex rounded-md shadow-sm">
                                 <select
+                                    value={imageSource}
                                     onChange={(e) => setImageSource(e.target.value as 'url' | 'file')}
                                     className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                 >
@@ -244,6 +246,7 @@ const CreateEvent: React.FC = () => {
                                 ) : (
                                     <input
                                         type="file"
+                                        accept="image/*"
                                         onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
                                         className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
                                     />
