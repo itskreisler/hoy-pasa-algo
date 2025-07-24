@@ -32,8 +32,8 @@ interface EventState {
     updateEvent: (eventId: string, eventData: Partial<Omit<Event, 'id' | 'user_id' | 'status'>>, token: string) => Promise<void>;
     deleteEvent: (eventId: string, token: string) => Promise<void>;
     fetchFavoriteEvents: (token: string) => Promise<void>;
-    addFavorite: (eventId: number, token: string) => Promise<void>;
-    removeFavorite: (eventId: number, token: string) => Promise<void>;
+    addFavorite: (eventId: string, token: string) => Promise<void>;
+    removeFavorite: (eventId: string, token: string) => Promise<void>;
     clearMyEvents: () => void;
 }
 

@@ -1,10 +1,9 @@
 import React from 'react'
 import { useEventStore } from '@src/stores/eventStore'
 import { useAuthStore } from '@src/stores/authStore'
-import { t } from '@src/i18n/config.i18n'
 
 interface RemoveFavoriteProps {
-    eventId: number
+    eventId: string
 }
 
 const RemoveFavorite: React.FC<RemoveFavoriteProps> = ({ eventId }) => {
@@ -23,7 +22,7 @@ const RemoveFavorite: React.FC<RemoveFavoriteProps> = ({ eventId }) => {
                 disabled={eventLoading}
                 className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors"
             >
-                {t('page.favorites.remove')}
+                Eliminar
             </button>
             {eventError && <p className="text-red-500 text-sm">{eventError}</p>}
         </>
