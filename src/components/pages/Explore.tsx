@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useEventStore } from '@src/stores/eventStore'
+import { useAuthStore } from '@src/stores/authStore'
 import { t } from '@src/i18n/config.i18n'
 import { Modal, EventDetails } from '@src/components/ui'
+import AddFavorite from './profile/AddFavorite'
+import RemoveFavorite from './profile/RemoveFavorite'
 
 const Explore: React.FC = () => {
-    const { events, loading, error, fetchEvents } = useEventStore()
+    const { events, loading, error, fetchEvents, favoriteEvents, fetchFavoriteEvents } = useEventStore()
+    const { token, isAuthenticated } = useAuthStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedEvent, setSelectedEvent] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchEvents()
-    }, [fetchEvents])
+        if (isAuthenticated && token) {
+            fetchFavoriteEvents(token)
+        }
+    }, [fetchEvents, isAuthenticated, token, fetchFavoriteEvents])
 
     const openModal = (event: any) => {
         setSelectedEvent(event)
@@ -29,6 +36,10 @@ const Explore: React.FC = () => {
             event.description?.toLowerCase().includes(searchTerm.toLowerCase())
         )
     }, [events, searchTerm])
+
+    const isFavorite = (eventId: string) => {
+        return favoriteEvents.some(event => event.id === eventId)
+    }
 
     if (loading) {
         return (
@@ -162,7 +173,13 @@ const Explore: React.FC = () => {
                                             }`}>
                                                 {event.status.toUpperCase()}
                                             </span>
-                                           
+                                            {isAuthenticated && (
+                                                isFavorite(event.id) ? (
+                                                    <RemoveFavorite eventId={event.id} />
+                                                ) : (
+                                                    <AddFavorite eventId={event.id} />
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 </div>

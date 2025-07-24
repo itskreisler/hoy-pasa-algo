@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react'
-import { useEventStore } from '@src/stores/eventStore'
+import React, { useEffect, useState } from 'react'
+import { useEventStore, type Event } from '@src/stores/eventStore'
 import { useAuthStore } from '@src/stores/authStore'
+import EditEventModal from './EditEventModal'
+import DeleteEventModal from './DeleteEventModal'
 
 const EventsTab: React.FC = () => {
     const { myEvents, myEventsLoading, fetchMyEvents } = useEventStore()
     const { token } = useAuthStore()
+    const [isEditModalOpen, setEditModalOpen] = useState(false)
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
 
     useEffect(() => {
         if (token) {
@@ -16,6 +21,16 @@ const EventsTab: React.FC = () => {
         if (token) {
             fetchMyEvents(token)
         }
+    }
+
+    const handleEdit = (event: Event) => {
+        setSelectedEvent(event)
+        setEditModalOpen(true)
+    }
+
+    const handleDelete = (event: Event) => {
+        setSelectedEvent(event)
+        setDeleteModalOpen(true)
     }
 
     return (
@@ -98,10 +113,10 @@ const EventsTab: React.FC = () => {
                                 {/* Actions */}
                                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                                     <div className="flex justify-end space-x-2">
-                                        <button onClick={() => alert('Esta accion aun no esta disponible')} className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                                        <button onClick={() => handleEdit(event)} className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                                             Editar
                                         </button>
-                                        <button onClick={() => alert('Esta accion aun no esta disponible')} className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors">
+                                        <button onClick={() => handleDelete(event)} className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors">
                                             Eliminar
                                         </button>
                                         {event.link && (
@@ -135,6 +150,8 @@ const EventsTab: React.FC = () => {
                     </div>
                 )}
             </div>
+            <EditEventModal event={selectedEvent} isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} />
+            <DeleteEventModal event={selectedEvent} isOpen={isDeleteModalOpen} onClose={() => setDeleteModalOpen(false)} />
         </div>
     )
 }
