@@ -33,8 +33,8 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
             }}
           />
           
-          {/* Badge de visibilidad */}
-          <div className="absolute top-4 left-4">
+          {/* Badge de visibilidad y botón Ver imagen completa */}
+          <div className="absolute top-4 left-4 flex items-center space-x-3">
             <span className={`px-3 py-1 text-sm font-medium rounded-full backdrop-blur-sm ${
               event.visibility === 'public' ? 'bg-green-100/90 text-green-700 dark:bg-green-900/80 dark:text-green-200' :
               event.visibility === 'private' ? 'bg-yellow-100/90 text-yellow-700 dark:bg-yellow-900/80 dark:text-yellow-200' :
@@ -42,10 +42,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
             }`}>
               {event.visibility.charAt(0).toUpperCase() + event.visibility.slice(1)}
             </span>
-          </div>
-
-          {/* Botón Ver imagen completa */}
-          <div className="absolute top-4 right-4">
+            
             <button
               onClick={() => setIsImageModalOpen(true)}
               className="px-3 py-1 text-sm font-medium rounded-full backdrop-blur-sm bg-black/50 hover:bg-black/70 text-white transition-colors duration-200 flex items-center space-x-2"
