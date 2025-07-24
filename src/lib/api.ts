@@ -134,3 +134,18 @@ export const logout = async (): Promise<void> => {
         method: 'POST'
     })
 }
+
+export const uploadFile = async (file: File, token: string) => {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await fetch(`${API_BASE_URL}/api/${API_VERSION}/upload/`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: formData
+    })
+
+    return response.json()
+}
