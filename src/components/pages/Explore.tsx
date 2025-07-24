@@ -53,7 +53,7 @@ const Explore: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map(event => (
-                            <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row">
+                            <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-in-out overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 flex flex-col sm:flex-row cursor-pointer group">
                                 {/* Sección de imagen - solo si existe */}
                                 {event.image_url && (
                                     <div className="w-full h-32 sm:w-20 sm:h-auto md:w-24 bg-gray-100 dark:bg-gray-700 relative flex-shrink-0 sm:min-h-full">
