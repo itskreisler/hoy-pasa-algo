@@ -126,7 +126,8 @@ export const useEventStore = create<EventState>((set, get) => ({
                 throw new Error(result.message || 'Error updating event')
             }
 
-            get().fetchMyEvents(token)
+            await get().fetchMyEvents(token)
+            set({ loading: false })
 
         } catch (err) {
             set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
@@ -149,7 +150,8 @@ export const useEventStore = create<EventState>((set, get) => ({
                 throw new Error(result.message || 'Error deleting event')
             }
 
-            get().fetchMyEvents(token)
+            await get().fetchMyEvents(token)
+            set({ loading: false })
 
         } catch (err) {
             set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
