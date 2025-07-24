@@ -1,41 +1,63 @@
-import React, { useState, useEffect } from 'react'
-import { useAuthStore } from '@src/stores/authStore'
-import { useEventStore } from '@src/stores/eventStore'
-import { ProfileSkeleton } from '@src/components/ui'
-import { t } from '@src/i18n/config.i18n'
+import React, { useState, useEffect } from 'react';
+import { useAuthStore } from '@src/stores/authStore';
+import { useEventStore } from '@src/stores/eventStore';
+import { ProfileSkeleton } from '@src/components/ui';
+import { t } from '@src/i18n/config.i18n';
+import { uploadFile } from '@src/lib/api';
 
 const CreateEvent: React.FC = () => {
-    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore()
-    const { createEvent, loading: eventLoading, error: eventError } = useEventStore()
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [date, setDate] = useState('')
-    const [visibility, setVisibility] = useState('public')
-    const [success, setSuccess] = useState<string | null>(null)
+    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore();
+    const { createEvent, loading: eventLoading, error: eventError } = useEventStore();
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [date, setDate] = useState('');
+    const [visibility, setVisibility] = useState('public');
+    const [success, setSuccess] = useState<string | null>(null);
+    const [imageSource, setImageSource] = useState<'url' | 'file'>('url');
+    const [imageUrl, setImageUrl] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     useEffect(() => {
-        checkAuth()
-    }, [checkAuth])
+        checkAuth();
+    }, [checkAuth]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setSuccess(null)
+        e.preventDefault();
+        setSuccess(null);
 
         if (!isAuthenticated || !token) {
-            return
+            return;
+        }
+
+        let finalImageUrl = imageUrl;
+
+        if (imageSource === 'file' && imageFile) {
+            try {
+                const response = await uploadFile(imageFile, token);
+                if (response.type === 'success' && response.data?.urls) {
+                    finalImageUrl = response.data.urls[0];
+                } else {
+                    throw new Error(response.message || 'Error al subir la imagen');
+                }
+            } catch (error) {
+                console.error(error);
+                return;
+            }
         }
 
         try {
-            await createEvent({ title, description, date, visibility }, token)
-            setSuccess(t('page.create_event.success'))
-            setTitle('')
-            setDescription('')
-            setDate('')
-            setVisibility('public')
-        } catch  {
+            await createEvent({ title, description, date, visibility, image_url: finalImageUrl }, token);
+            setSuccess(t('page.create_event.success'));
+            setTitle('');
+            setDescription('');
+            setDate('');
+            setVisibility('public');
+            setImageUrl('');
+            setImageFile(null);
+        } catch {
             // error is handled by the store
         }
-    }
+    };
 
     const loading = authLoading || eventLoading
 
@@ -200,17 +222,33 @@ const CreateEvent: React.FC = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('page.create_event.form.image_url')} <span className="text-gray-400 text-xs">({t('page.create_event.form.not_available')})</span>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {t('page.create_event.form.image_url')}
                             </label>
-                            <input
-                                type="text"
-                                id="image_url"
-                                disabled
-                                aria-disabled="true"
-                                aria-label={`${t('page.create_event.form.image_url')} - ${t('page.create_event.form.field_not_available')}`}
-                                className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
-                            />
+                            <div className="mt-1 flex rounded-md shadow-sm">
+                                <select
+                                    onChange={(e) => setImageSource(e.target.value as 'url' | 'file')}
+                                    className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"
+                                >
+                                    <option value="url">URL</option>
+                                    <option value="file">{t('page.create_event.form.upload_file')}</option>
+                                </select>
+                                {imageSource === 'url' ? (
+                                    <input
+                                        type="text"
+                                        value={imageUrl}
+                                        onChange={(e) => setImageUrl(e.target.value)}
+                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                                        placeholder="https://example.com/image.png"
+                                    />
+                                ) : (
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                                    />
+                                )}
+                            </div>
                         </div>
                         <div className="md:col-span-2">
                             <label htmlFor="link" className="block text-sm font-medium text-gray-700 dark:text-gray-300">

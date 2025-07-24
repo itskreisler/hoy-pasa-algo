@@ -38,6 +38,7 @@ export const es = {
                 subcategory: 'Subcategoría',
                 hashtags: 'Hashtags',
                 image_url: 'URL de la Imagen',
+                upload_file: 'Subir archivo',
                 link: 'Enlace',
                 calendar: 'Calendario',
                 visibility: 'Visibilidad',

@@ -76,7 +76,7 @@ export const useEventStore = create<EventState>((set) => ({
     },
 
     createEvent: async (eventData, token) => {
-        set({ loading: true, error: null })
+        set({ loading: true, error: null });
         try {
             const response = await fetch(ENDPOINTS.events.base, {
                 method: 'POST',
@@ -85,19 +85,21 @@ export const useEventStore = create<EventState>((set) => ({
                     Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...eventData, user_id: useAuthStore.getState().user?.id })
-            })
+            });
+
             if (!response.ok) {
-                const result = await response.json()
-                throw new Error(result.message || 'Error creating event')
+                const result = await response.json();
+                throw new Error(result.message || 'Error creating event');
             }
+
             // After creating an event, fetch all events again to update the list
-            const fetchResponse = await fetch(ENDPOINTS.events.base)
-            const fetchResult = await fetchResponse.json()
-            set({ events: fetchResult.data || [], loading: false })
+            const fetchResponse = await fetch(ENDPOINTS.events.base);
+            const fetchResult = await fetchResponse.json();
+            set({ events: fetchResult.data || [], loading: false });
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
-            throw err
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
+            throw err;
         }
     },
 
