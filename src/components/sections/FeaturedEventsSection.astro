@@ -1,5 +1,5 @@
 ---
-import Carousel from "@src/components/Carousel.astro";
+import Carousel from "@src/components/react/Carousel";
 ---
 
 <section class="bg-white dark:bg-gray-800 py-6 md:py-8 border-b border-gray-200 dark:border-gray-700">
@@ -11,5 +11,5 @@ import Carousel from "@src/components/Carousel.astro";
             Descubre lo mejor que está pasando en tu ciudad
         </p>
     </div>
-    <Carousel />
+    <Carousel client:load />
 </section>
