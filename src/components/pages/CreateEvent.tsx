@@ -1,63 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { useAuthStore } from '@src/stores/authStore';
-import { useEventStore } from '@src/stores/eventStore';
-import { ProfileSkeleton } from '@src/components/ui';
-import { t } from '@src/i18n/config.i18n';
-import { uploadFile } from '@src/lib/api';
+import React, { useState, useEffect } from 'react'
+import { useAuthStore } from '@src/stores/authStore'
+import { useEventStore } from '@src/stores/eventStore'
+import { ProfileSkeleton } from '@src/components/ui'
+import { t } from '@src/i18n/config.i18n'
+import { uploadFile } from '@src/lib/api'
 
 const CreateEvent: React.FC = () => {
-    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore();
-    const { createEvent, loading: eventLoading, error: eventError } = useEventStore();
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
-    const [visibility, setVisibility] = useState('public');
-    const [success, setSuccess] = useState<string | null>(null);
-    const [imageSource, setImageSource] = useState<'url' | 'file'>('url');
-    const [imageUrl, setImageUrl] = useState('');
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const { user, token, isAuthenticated, loading: authLoading, checkAuth } = useAuthStore()
+    const { createEvent, loading: eventLoading, error: eventError } = useEventStore()
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [date, setDate] = useState('')
+    const [visibility, setVisibility] = useState('public')
+    const [success, setSuccess] = useState<string | null>(null)
+    const [imageSource, setImageSource] = useState<'url' | 'file'>('url')
+    const [imageUrl, setImageUrl] = useState('')
+    const [imageFile, setImageFile] = useState<File | null>(null)
 
     useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+        checkAuth()
+    }, [checkAuth])
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSuccess(null);
+        e.preventDefault()
+        setSuccess(null)
 
         if (!isAuthenticated || !token) {
-            return;
+            return
         }
 
-        let finalImageUrl = imageUrl;
+        let finalImageUrl = imageUrl
 
         if (imageSource === 'file' && imageFile) {
             try {
-                const response = await uploadFile(imageFile, token);
+                const response = await uploadFile(imageFile, token)
                 if (response.type === 'success' && response.data?.urls) {
-                    finalImageUrl = response.data.urls[0];
+                    finalImageUrl = response.data.urls[0]
                 } else {
-                    throw new Error(response.message || 'Error al subir la imagen');
+                    throw new Error(response.message || 'Error al subir la imagen')
                 }
             } catch (error) {
-                console.error(error);
-                return;
+                console.error(error)
+                return
             }
         }
 
         try {
-            await createEvent({ title, description, date, visibility, image_url: finalImageUrl }, token);
-            setSuccess(t('page.create_event.success'));
-            setTitle('');
-            setDescription('');
-            setDate('');
-            setVisibility('public');
-            setImageUrl('');
-            setImageFile(null);
+            await createEvent({ title, description, date, visibility, image_url: finalImageUrl }, token)
+            setSuccess(t('page.create_event.success'))
+            setTitle('')
+            setDescription('')
+            setDate('')
+            setVisibility('public')
+            setImageUrl('')
+            setImageFile(null)
         } catch {
             // error is handled by the store
         }
-    };
+    }
 
     const loading = authLoading || eventLoading
 
@@ -228,7 +228,7 @@ const CreateEvent: React.FC = () => {
                             <div className="mt-1 flex rounded-md shadow-sm">
                                 <select
                                     onChange={(e) => setImageSource(e.target.value as 'url' | 'file')}
-                                    className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"
+                                    className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                 >
                                     <option value="url">URL</option>
                                     <option value="file">{t('page.create_event.form.upload_file')}</option>
@@ -238,14 +238,14 @@ const CreateEvent: React.FC = () => {
                                         type="text"
                                         value={imageUrl}
                                         onChange={(e) => setImageUrl(e.target.value)}
-                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
                                         placeholder="https://example.com/image.png"
                                     />
                                 ) : (
                                     <input
                                         type="file"
                                         onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
-                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
+                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
                                     />
                                 )}
                             </div>
