@@ -166,13 +166,7 @@ const Explore: React.FC = () => {
 
                                         {/* Status y botón */}
                                         <div className="flex items-center justify-between sm:justify-end space-x-2">
-                                            <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-                                                event.status === 'active' ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300' :
-                                                event.status === 'cancelled' ? 'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300' :
-                                                'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
-                                            }`}>
-                                                {event.status.toUpperCase()}
-                                            </span>
+                                            
                                             {isAuthenticated && (
                                                 isFavorite(event.id) ? (
                                                     <RemoveFavorite eventId={event.id} />

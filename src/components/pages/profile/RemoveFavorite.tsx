@@ -10,7 +10,8 @@ const RemoveFavorite: React.FC<RemoveFavoriteProps> = ({ eventId }) => {
     const { removeFavorite, favoritesLoading, error: eventError } = useEventStore()
     const { token } = useAuthStore()
 
-    const handleRemoveFavorite = async () => {
+    const handleRemoveFavorite = async (e: React.MouseEvent) => {
+        e.stopPropagation() // Prevenir que se abra el modal
         if (!token) return
         await removeFavorite(eventId, token)
     }

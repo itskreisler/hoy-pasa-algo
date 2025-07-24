@@ -10,7 +10,8 @@ const AddFavorite: React.FC<AddFavoriteProps> = ({ eventId }) => {
     const { addFavorite, favoritesLoading, error: eventError } = useEventStore()
     const { token } = useAuthStore()
 
-    const handleAddFavorite = async () => {
+    const handleAddFavorite = async (e: React.MouseEvent) => {
+        e.stopPropagation() // Prevenir que se abra el modal
         if (!token) return
         await addFavorite(eventId, token)
     }
