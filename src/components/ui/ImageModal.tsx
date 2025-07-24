@@ -134,7 +134,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm text-center">{imageAlt}</p>
             <p className="text-xs text-gray-300 text-center mt-1">
-              Presiona ESC o haz clic fuera para cerrar
+              Haz click en X para cerrar
             </p>
           </div>
         )}
