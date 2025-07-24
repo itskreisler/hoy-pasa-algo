@@ -85,7 +85,7 @@ export const useEventStore = create<EventState>((set, get) => ({
     },
 
     createEvent: async (eventData, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
             const response = await fetch(ENDPOINTS.events.base, {
                 method: 'POST',
@@ -94,23 +94,23 @@ export const useEventStore = create<EventState>((set, get) => ({
                     Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...eventData, user_id: useAuthStore.getState().user?.id })
-            });
+            })
 
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error creating event');
+                const result = await response.json()
+                throw new Error(result.message || 'Error creating event')
             }
 
             get().fetchMyEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
     },
 
     updateEvent: async (eventId, eventData, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
             const response = await fetch(`${ENDPOINTS.events.base}/${eventId}`, {
                 method: 'PUT',
@@ -119,48 +119,48 @@ export const useEventStore = create<EventState>((set, get) => ({
                     Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify(eventData)
-            });
+            })
 
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error updating event');
+                const result = await response.json()
+                throw new Error(result.message || 'Error updating event')
             }
 
             get().fetchMyEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
     },
 
     deleteEvent: async (eventId, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
             const response = await fetch(`${ENDPOINTS.events.base}/${eventId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            });
+            })
 
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error deleting event');
+                const result = await response.json()
+                throw new Error(result.message || 'Error deleting event')
             }
 
             get().fetchMyEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
     },
 
     fetchFavoriteEvents: async (token: string) => {
         set({ favoritesLoading: true, error: null })
         try {
-            const response = await fetch(ENDPOINTS.users.favorites, {
+            const response = await fetch(ENDPOINTS.events.favorites, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -178,50 +178,50 @@ export const useEventStore = create<EventState>((set, get) => ({
     },
 
     addFavorite: async (eventId, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
-            const response = await fetch(ENDPOINTS.users.favorites, {
+            const response = await fetch(ENDPOINTS.events.favorites, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({ event_id: eventId })
-            });
+            })
 
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error adding favorite');
+                const result = await response.json()
+                throw new Error(result.message || 'Error adding favorite')
             }
 
             get().fetchFavoriteEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
     },
 
     removeFavorite: async (eventId, token) => {
-        set({ loading: true, error: null });
+        set({ loading: true, error: null })
         try {
-            const response = await fetch(`${ENDPOINTS.users.favorites}/${eventId}`, {
+            const response = await fetch(`${ENDPOINTS.events.favorites}/${eventId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            });
+            })
 
             if (!response.ok) {
-                const result = await response.json();
-                throw new Error(result.message || 'Error removing favorite');
+                const result = await response.json()
+                throw new Error(result.message || 'Error removing favorite')
             }
 
             get().fetchFavoriteEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false });
-            throw err;
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            throw err
         }
     },
 

@@ -1,5 +1,5 @@
 // Configuración central de la API
-export const API_BASE_URL = 'http://localhost:5000'
+export const API_BASE_URL = 'https://55af9a03b154.ngrok-free.app' // 'http://localhost:5000'
 export const API_VERSION = 'v1'
 
 // URL completa de la API
@@ -15,7 +15,8 @@ export const ENDPOINTS = {
     },
     events: {
         base: `${API_URL}/events/`,
-        myEvents: `${API_URL}/events/my-events`
+        myEvents: `${API_URL}/events/my-events`,
+        favorites: `${API_URL}/events/favorites`
     },
     users: {
         stats: `${API_URL}/users/stats`
