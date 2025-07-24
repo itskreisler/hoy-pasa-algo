@@ -1,14 +1,27 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useEventStore } from '@src/stores/eventStore'
 import { t } from '@src/i18n/config.i18n'
+import { Modal, EventDetails } from '@src/components/ui'
 
 const Explore: React.FC = () => {
     const { events, loading, error, fetchEvents } = useEventStore()
     const [searchTerm, setSearchTerm] = useState('')
+    const [selectedEvent, setSelectedEvent] = useState<any>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchEvents()
     }, [fetchEvents])
+
+    const openModal = (event: any) => {
+        setSelectedEvent(event)
+        setIsModalOpen(true)
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
+        setSelectedEvent(null)
+    }
 
     const filteredEvents = useMemo(() => {
         return events.filter(event =>
@@ -53,7 +66,11 @@ const Explore: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map(event => (
-                            <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row">
+                            <div 
+                                key={event.id} 
+                                onClick={() => openModal(event)}
+                                className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-in-out overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 flex flex-col sm:flex-row cursor-pointer group"
+                            >
                                 {/* Sección de imagen - solo si existe */}
                                 {event.image_url && (
                                     <div className="w-full h-32 sm:w-20 sm:h-auto md:w-24 bg-gray-100 dark:bg-gray-700 relative flex-shrink-0 sm:min-h-full">
@@ -166,6 +183,15 @@ const Explore: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            {/* Modal reutilizable */}
+            <Modal 
+                isOpen={isModalOpen} 
+                onClose={closeModal}
+                maxWidth="4xl"
+            >
+                {selectedEvent && <EventDetails event={selectedEvent} />}
+            </Modal>
         </main>
     )
 }
