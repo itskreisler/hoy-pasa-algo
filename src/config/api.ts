@@ -15,7 +15,8 @@ export const ENDPOINTS = {
     },
     events: {
         base: `${API_URL}/events/`,
-        myEvents: `${API_URL}/events/my-events`
+        myEvents: `${API_URL}/events/my-events`,
+        favorites: `${API_URL}/events/favorites`
     },
     users: {
         stats: `${API_URL}/users/stats`

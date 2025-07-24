@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useEventStore } from '@src/stores/eventStore'
-import { t } from '@src/i18n/config.i18n'
 
 const UpcomingEventsSection: React.FC = () => {
     const { events, loading, error, fetchEvents } = useEventStore()
@@ -50,7 +49,7 @@ const UpcomingEventsSection: React.FC = () => {
         return (
             <aside className="w-full lg:w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/20 p-4 md:p-6 lg:order-last border dark:border-gray-700">
                 <h3 className="text-lg md:text-xl font-bold mb-4 text-center lg:text-left text-gray-900 dark:text-gray-100">
-                    {t('page.home.upcomingEvents')}
+                    Próximos Eventos
                 </h3>
                 <div className="space-y-4">
                     {[1, 2, 3].map(i => (
@@ -80,7 +79,7 @@ const UpcomingEventsSection: React.FC = () => {
         return (
             <aside className="w-full lg:w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/20 p-4 md:p-6 lg:order-last border dark:border-gray-700">
                 <h3 className="text-lg md:text-xl font-bold mb-4 text-center lg:text-left text-gray-900 dark:text-gray-100">
-                    {t('page.home.upcomingEvents')}
+                    Próximos Eventos
                 </h3>
                 <div className="text-center py-8">
                     <div className="text-red-500 dark:text-red-400 mb-2">
@@ -106,7 +105,7 @@ const UpcomingEventsSection: React.FC = () => {
         <aside className="w-full lg:w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/20 p-4 md:p-6 lg:order-last border dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">
-                    {t('page.home.upcomingEvents')}
+                    Próximos Eventos
                 </h3>
                 <button 
                     onClick={fetchEvents}

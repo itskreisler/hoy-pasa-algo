@@ -1,5 +1,4 @@
 import React from 'react'
-import { t } from '@src/i18n/config.i18n'
 import { useAuthStore } from '@src/stores/authStore'
 import { NavSkeleton } from '@src/components/ui'
 
@@ -23,7 +22,7 @@ export const DesktopNav: React.FC = () => {
                         href="/" 
                         className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                     >
-                        {t('nav.home')}
+                        Inicio
                     </a>
                 </li>
                 <li>
@@ -31,7 +30,7 @@ export const DesktopNav: React.FC = () => {
                         href="/explore"
                         className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                     >
-                        {t('nav.explore')}
+                        Explorar
                     </a>
                 </li>
                 {isAuthenticated && (
@@ -41,7 +40,7 @@ export const DesktopNav: React.FC = () => {
                                 href="/create-event"
                                 className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                             >
-                                {t('nav.create_event')}
+                                Crear Evento
                             </a>
                         </li>
                         <li>
@@ -49,7 +48,7 @@ export const DesktopNav: React.FC = () => {
                                 href="/profile"
                                 className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                             >
-                                {t('nav.profile')}
+                                Perfil
                             </a>
                         </li>
                     </>
@@ -61,7 +60,7 @@ export const DesktopNav: React.FC = () => {
                                 href="/sign-in" 
                                 className="hover:text-blue-200 dark:hover:text-blue-300 transition-colors text-sm lg:text-base font-medium"
                             >
-                                {t('nav.login')}
+                                Iniciar Sesión
                             </a>
                         </li>
                         <li>
@@ -69,7 +68,7 @@ export const DesktopNav: React.FC = () => {
                                 href="/sign-up" 
                                 className="bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-md hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors text-sm lg:text-base font-medium"
                             >
-                                {t('nav.singup')}
+                                Registrarse
                             </a>
                         </li>
                     </>

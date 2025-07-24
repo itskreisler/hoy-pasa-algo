@@ -13,7 +13,7 @@ class Evento(BaseModel):
     city: Optional[str] = None
     category_id: Optional[str] = None
     subcategory_id: Optional[str] = None
-    hashtags: Optional[list[str]] = None
+    hashtags: Optional[str] = None
     calendar: Optional[str] = None
     image_url: Optional[str] = None
     link: Optional[str] = None

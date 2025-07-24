@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useEventStore } from '@src/stores/eventStore'
+import { useAuthStore } from '@src/stores/authStore'
 import { t } from '@src/i18n/config.i18n'
 import { Modal, EventDetails } from '@src/components/ui'
+import AddFavorite from './profile/AddFavorite'
+import RemoveFavorite from './profile/RemoveFavorite'
 
 const Explore: React.FC = () => {
-    const { events, loading, error, fetchEvents } = useEventStore()
+    const { events, loading, error, fetchEvents, favoriteEvents, fetchFavoriteEvents } = useEventStore()
+    const { token, isAuthenticated } = useAuthStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedEvent, setSelectedEvent] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchEvents()
-    }, [fetchEvents])
+        if (isAuthenticated && token) {
+            fetchFavoriteEvents(token)
+        }
+    }, [fetchEvents, isAuthenticated, token, fetchFavoriteEvents])
 
     const openModal = (event: any) => {
         setSelectedEvent(event)
@@ -29,6 +36,10 @@ const Explore: React.FC = () => {
             event.description?.toLowerCase().includes(searchTerm.toLowerCase())
         )
     }, [events, searchTerm])
+
+    const isFavorite = (eventId: string) => {
+        return favoriteEvents.some(event => event.id === eventId)
+    }
 
     if (loading) {
         return (
@@ -155,14 +166,14 @@ const Explore: React.FC = () => {
 
                                         {/* Status y botón */}
                                         <div className="flex items-center justify-between sm:justify-end space-x-2">
-                                            <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-                                                event.status === 'active' ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300' :
-                                                event.status === 'cancelled' ? 'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300' :
-                                                'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
-                                            }`}>
-                                                {event.status.toUpperCase()}
-                                            </span>
-                                           
+                                            
+                                            {isAuthenticated && (
+                                                isFavorite(event.id) ? (
+                                                    <RemoveFavorite eventId={event.id} />
+                                                ) : (
+                                                    <AddFavorite eventId={event.id} />
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 </div>
