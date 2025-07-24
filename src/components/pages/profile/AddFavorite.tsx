@@ -7,7 +7,7 @@ interface AddFavoriteProps {
 }
 
 const AddFavorite: React.FC<AddFavoriteProps> = ({ eventId }) => {
-    const { addFavorite, loading: eventLoading, error: eventError } = useEventStore()
+    const { addFavorite, favoritesLoading, error: eventError } = useEventStore()
     const { token } = useAuthStore()
 
     const handleAddFavorite = async () => {
@@ -19,7 +19,7 @@ const AddFavorite: React.FC<AddFavoriteProps> = ({ eventId }) => {
         <>
             <button
                 onClick={handleAddFavorite}
-                disabled={eventLoading}
+                disabled={favoritesLoading}
                 className="px-3 py-1 text-xs bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300 rounded hover:bg-yellow-200 dark:hover:bg-yellow-900/70 transition-colors"
             >
                 Agregar

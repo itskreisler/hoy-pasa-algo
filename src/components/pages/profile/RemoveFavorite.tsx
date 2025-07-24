@@ -7,7 +7,7 @@ interface RemoveFavoriteProps {
 }
 
 const RemoveFavorite: React.FC<RemoveFavoriteProps> = ({ eventId }) => {
-    const { removeFavorite, loading: eventLoading, error: eventError } = useEventStore()
+    const { removeFavorite, favoritesLoading, error: eventError } = useEventStore()
     const { token } = useAuthStore()
 
     const handleRemoveFavorite = async () => {
@@ -19,7 +19,7 @@ const RemoveFavorite: React.FC<RemoveFavoriteProps> = ({ eventId }) => {
         <>
             <button
                 onClick={handleRemoveFavorite}
-                disabled={eventLoading}
+                disabled={favoritesLoading}
                 className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-900/70 transition-colors"
             >
                 Eliminar

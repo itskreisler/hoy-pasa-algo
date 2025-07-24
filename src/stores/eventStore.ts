@@ -182,7 +182,7 @@ export const useEventStore = create<EventState>((set, get) => ({
     },
 
     addFavorite: async (eventId, token) => {
-        set({ loading: true, error: null })
+        set({ favoritesLoading: true, error: null })
         try {
             const response = await fetch(ENDPOINTS.events.favorites, {
                 method: 'POST',
@@ -198,16 +198,16 @@ export const useEventStore = create<EventState>((set, get) => ({
                 throw new Error(result.message || 'Error adding favorite')
             }
 
-            get().fetchFavoriteEvents(token)
+            await get().fetchFavoriteEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', favoritesLoading: false })
             throw err
         }
     },
 
     removeFavorite: async (eventId, token) => {
-        set({ loading: true, error: null })
+        set({ favoritesLoading: true, error: null })
         try {
             const response = await fetch(`${ENDPOINTS.events.favorites}/${eventId}`, {
                 method: 'DELETE',
@@ -221,10 +221,10 @@ export const useEventStore = create<EventState>((set, get) => ({
                 throw new Error(result.message || 'Error removing favorite')
             }
 
-            get().fetchFavoriteEvents(token)
+            await get().fetchFavoriteEvents(token)
 
         } catch (err) {
-            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', loading: false })
+            set({ error: err instanceof Error ? err.message : 'An unknown error occurred', favoritesLoading: false })
             throw err
         }
     },
