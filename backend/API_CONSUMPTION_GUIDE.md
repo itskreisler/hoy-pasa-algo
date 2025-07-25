@@ -1,294 +1,139 @@
-# Guía de Consumo de la API de Eventos
+# Guía de Consumo de la API - Hoy Pasa Algo
 
-Esta guía proporciona instrucciones detalladas y ejemplos sobre cómo interactuar con cada uno de los endpoints de la API.
+Esta guía explica cómo interactuar con los endpoints de la API del backend.
 
-## 1. Autenticación
+##  baseURL
+Todos los endpoints están disponibles bajo la siguiente URL base:
+`http://localhost:5000/api/v1`
 
-La autenticación se basa en tokens. Para acceder a los endpoints protegidos, primero debes registrar un usuario, luego iniciar sesión para obtener un token y, finalmente, incluir ese token en las cabeceras de tus solicitudes.
+---
+
+## 1. Autenticación (`/auth`)
+
+La autenticación se gestiona con tokens JWT. Necesitas un token para acceder a las rutas protegidas.
 
 ### 1.1. Registrar un Nuevo Usuario
+Crea una cuenta para obtener tus credenciales.
 
-Para crear una cuenta, envía una petición `POST` a `/api/v1/auth/register`.
-
-**Endpoint:** `POST /api/v1/auth/register`
-
-**Cuerpo de la Petición (JSON):**
-
-```json
-{
-  "email": "tu_email@example.com",
-  "password": "tu_contraseña_segura",
-  "username": "tu_nombre_de_usuario",
-  "full_name": "Tu Nombre Completo"
-}
-```
-
-**Ejemplo con `curl`:**
-
-```bash
-curl -X POST http://localhost:5000/api/v1/auth/register \
--H "Content-Type: application/json" \
--d '{
-  "email": "testuser@example.com",
-  "password": "password123",
-  "username": "testuser",
-  "full_name": "Test User"
-}'
-```
-
-**Respuesta Exitosa (201):**
-
-La API te devolverá los datos del usuario recién creado y un token de autenticación. **Guarda este token**, lo necesitarás para las siguientes peticiones.
-
-```json
-{
-  "type": "success",
-  "message": "Usuario registrado exitosamente",
-  "data": {
-    "user": {
-      "id": "...",
-      "username": "testuser",
-      "email": "testuser@example.com",
-      "full_name": "Test User",
-      "rol": "user"
-    },
-    "token": "TU_TOKEN_DE_AUTENTICACION"
+- **Endpoint:** `POST /auth/register`
+- **Body (JSON):**
+  ```json
+  {
+    "email": "tu_email@example.com",
+    "password": "tu_contraseña",
+    "username": "tu_usuario",
+    "full_name": "Tu Nombre Completo"
   }
-}
-```
+  ```
+- **Respuesta Exitosa (201):**
+  ```json
+  {
+    "message": "Usuario registrado exitosamente",
+    "token": "TU_TOKEN_JWT"
+  }
+  ```
 
 ### 1.2. Iniciar Sesión
+Inicia sesión para obtener un token de autenticación.
 
-Para iniciar sesión, envía tus credenciales al endpoint de login.
-
-**Endpoint:** `POST /api/v1/auth/login`
-
-**Cuerpo de la Petición (JSON):**
-
-```json
-{
-  "email": "tu_email@example.com",
-  "password": "tu_contraseña"
-}
-```
-
-**Ejemplo con `curl`:**
-
-```bash
-curl -X POST http://localhost:5000/api/v1/auth/login \
--H "Content-Type: application/json" \
--d '{
-  "email": "testuser@example.com",
-  "password": "password123"
-}'
-```
-
-**Respuesta Exitosa (200):**
-
-Al igual que en el registro, obtendrás un nuevo token.
-
-```json
-{
-  "type": "success",
-  "message": "Login exitoso",
-  "data": {
-    "user": { ... },
-    "token": "TU_NUEVO_TOKEN_DE_AUTENTICACION"
+- **Endpoint:** `POST /auth/login`
+- **Body (JSON):**
+  ```json
+  {
+    "email": "tu_email@example.com",
+    "password": "tu_contraseña"
   }
-}
-```
+  ```
+- **Respuesta Exitosa (200):**
+  ```json
+  {
+    "message": "Login exitoso",
+    "token": "TU_TOKEN_JWT"
+  }
+  ```
 
 ### 1.3. Acceder a Rutas Protegidas
+Para acceder a rutas protegidas, incluye el token en la cabecera `Authorization`.
 
-Para acceder a un endpoint que requiere autenticación, debes incluir el token en la cabecera `Authorization` con el prefijo `Bearer`.
-
-**Ejemplo: Obtener tu propio perfil (`/api/v1/auth/me`)**
-
-**Ejemplo con `curl`:**
-
-```bash
-# Reemplaza TU_TOKEN con el token que obtuviste al registrarte o iniciar sesión
-curl -X GET http://localhost:5000/api/v1/auth/me \
--H "Authorization: Bearer TU_TOKEN"
-```
-
-**Ejemplo con JavaScript (`fetch`):**
-
-```javascript
-const token = 'TU_TOKEN'; // El token que guardaste
-
-fetch('http://localhost:5000/api/v1/auth/me', {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer ${token}`
-  }
-})
-.then(response => response.json())
-.then(data => console.log(data));
-```
-
-Si el token es válido, recibirás los datos de tu perfil. Si no, obtendrás un error `401 Unauthorized`.
+- **Cabecera:** `Authorization: Bearer TU_TOKEN_JWT`
+- **Ejemplo (`GET /auth/me`):**
+  ```bash
+  curl -X GET http://localhost:5000/api/v1/auth/me \
+  -H "Authorization: Bearer TU_TOKEN_JWT"
+  ```
+  Devuelve los datos del usuario autenticado.
 
 ---
 
-## 2. Eventos
+## 2. Eventos (`/events`)
 
-Los endpoints de eventos te permiten gestionar todo lo relacionado con los eventos de la plataforma.
+Gestión completa de los eventos de la plataforma.
 
-### 2.1. Crear un Evento
-
-Para crear un nuevo evento, necesitas estar autenticado.
-
-**Endpoint:** `POST /api/v1/events/`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-**Cuerpo de la Petición (JSON):**
-
-```json
-{
-  "title": "Lanzamiento de mi Nuevo Libro",
-  "description": "Ven a la presentación de mi último libro de ciencia ficción.",
-  "date": "2025-10-15",
-  "visibility": "public"
-}
-```
-
-*   `visibility` puede ser `public`, `private` (solo visible para ti y la gente que invitas, aunque la lógica de invitación no está implementada), o `only_me` (solo visible para ti).
-
-**Ejemplo con JavaScript (`fetch`):**
-
-```javascript
-const token = 'TU_TOKEN';
-
-const eventData = {
-  title: 'Concierto de Rock',
-  description: 'Las mejores bandas locales en una noche épica.',
-  date: '2025-11-20',
-  visibility: 'public'
-};
-
-fetch('http://localhost:5000/api/v1/events/', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
-  },
-  body: JSON.stringify(eventData)
-})
-.then(response => response.json())
-.then(data => console.log(data));
-```
+### 2.1. Crear un Evento (Autenticado)
+- **Endpoint:** `POST /events/`
+- **Body (JSON):**
+  ```json
+  {
+    "title": "Título del Evento",
+    "description": "Descripción detallada del evento.",
+    "date": "YYYY-MM-DD",
+    "visibility": "public" // public, private, only_me
+  }
+  ```
 
 ### 2.2. Obtener Eventos
+- **Endpoint:** `GET /events/`
+- **Query Params (Opcionales):**
+  - `q`: Búsqueda por texto en título y descripción.
+  - `city`: Filtrar por ciudad.
+  - `category`: Filtrar por categoría.
+- **Comportamiento:**
+  - **Sin autenticar:** Devuelve solo eventos `public`.
+  - **Autenticado:** Devuelve eventos `public` de todos, más los eventos `private` y `only_me` del propio usuario.
 
-Puedes obtener una lista de eventos. La visibilidad de los eventos devueltos depende de si estás autenticado o no.
+### 2.3. Actualizar un Evento (Solo Propietario)
+- **Endpoint:** `PUT /events/{event_id}`
+- **Body (JSON):** Incluye solo los campos a modificar.
 
-*   **Si no estás autenticado**, solo verás los eventos `public`.
-*   **Si estás autenticado**, verás los eventos `public` de todos y tus propios eventos `private` y `only_me`.
-
-**Endpoint:** `GET /api/v1/events/`
-
-**Ejemplo con `curl` (sin autenticar):**
-
-```bash
-curl http://localhost:5000/api/v1/events/
-```
-
-**Ejemplo con `curl` (autenticado):**
-
-```bash
-curl http://localhost:5000/api/v1/events/ \
--H "Authorization: Bearer TU_TOKEN"
-```
-
-### 2.3. Actualizar un Evento
-
-Solo puedes actualizar los eventos que tú has creado.
-
-**Endpoint:** `PUT /api/v1/events/{event_id}`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-**Cuerpo de la Petición (JSON):**
-
-Puedes enviar solo los campos que quieres cambiar.
-
-```json
-{
-  "title": "Título del Evento Actualizado",
-  "city": "Nueva Ciudad"
-}
-```
-
-### 2.4. Eliminar un Evento (Soft Delete)
-
-Esto no borra el evento de la base de datos, sino que lo marca como "eliminado" para que ya no sea visible en las listas públicas. Solo el propietario puede hacerlo.
-
-**Endpoint:** `DELETE /api/v1/events/{event_id}`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
+### 2.4. Eliminar un Evento (Soft Delete, Solo Propietario)
+Marca un evento como "archivado".
+- **Endpoint:** `DELETE /events/{event_id}`
 
 ---
 
-## 3. Usuarios
+## 3. Favoritos (`/events/favorites`)
 
-Estos endpoints te permiten gestionar los datos de los usuarios.
+Los usuarios autenticados pueden gestionar su lista de eventos favoritos.
 
-### 3.1. Obtener tu Propio Perfil
+### 3.1. Añadir un Evento a Favoritos
+- **Endpoint:** `POST /events/favorites`
+- **Body (JSON):**
+  ```json
+  { "event_id": "ID_DEL_EVENTO" }
+  ```
 
-Ya hemos visto esto en la sección de autenticación, pero aquí está de nuevo.
+### 3.2. Obtener tus Favoritos
+- **Endpoint:** `GET /events/favorites`
 
-**Endpoint:** `GET /api/v1/auth/me`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-### 3.2. Actualizar tu Perfil
-
-Puedes actualizar la información de tu perfil, como tu nombre completo. No puedes cambiar tu email o rol a través de este endpoint.
-
-**Endpoint:** `PUT /api/v1/users/{user_id}`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-**Cuerpo de la Petición (JSON):**
-
-```json
-{
-  "full_name": "Mi Nuevo Nombre Completo"
-}
-```
+### 3.3. Eliminar un Favorito
+- **Endpoint:** `DELETE /events/favorites/{event_id}`
 
 ---
 
-## 4. Favoritos
+## 4. Usuarios (`/users`)
 
-Puedes marcar eventos como favoritos para guardarlos en una lista personal.
+Endpoints para gestionar datos de usuarios.
 
-### 4.1. Añadir un Evento a Favoritos
+### 4.1. Obtener tu Propio Perfil
+- **Endpoint:** `GET /auth/me` (ver sección de autenticación)
 
-**Endpoint:** `POST /api/v1/events/favorites`
+### 4.2. Actualizar tu Perfil (Solo Propietario)
+- **Endpoint:** `PUT /users/{user_id}`
+- **Body (JSON):**
+  ```json
+  { "full_name": "Tu Nuevo Nombre" }
+  ```
 
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-**Cuerpo de la Petición (JSON):**
-
-```json
-{
-  "event_id": "ID_DEL_EVENTO_A_GUARDAR"
-}
-```
-
-### 4.2. Obtener tus Favoritos
-
-Devuelve una lista de todos los eventos que has marcado como favoritos.
-
-**Endpoint:** `GET /api/v1/events/favorites`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
-
-### 4.3. Eliminar un Favorito
-
-**Endpoint:** `DELETE /api/v1/events/favorites/{event_id}`
-
-**Cabecera Requerida:** `Authorization: Bearer TU_TOKEN`
+### 4.3. Obtener Perfil de Otro Usuario
+- **Endpoint:** `GET /users/{user_id}`
+- **Respuesta:** Devuelve información pública del usuario.

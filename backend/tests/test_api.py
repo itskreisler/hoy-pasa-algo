@@ -295,7 +295,7 @@ def test_09_create_event_complete():
         "city": "Madrid",
         "category_id": "1",
         "subcategory_id": "1",
-        "hashtags": ["tech", "conferencia", "madrid"],
+        "hashtags": "tech,conferencia,madrid",
         "calendar": "2025-08-15T09:00:00",
         "image_url": "https://example.com/evento.jpg",
         "link": "https://tech-madrid.com",

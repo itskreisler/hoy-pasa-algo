@@ -59,3 +59,6 @@ themeStore.subscribe((state) => {
 
 // Hook para usar en React
 export const useThemeStore = () => useStore(themeStore)
+
+// Export the store for testing
+export { themeStore };

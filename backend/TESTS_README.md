@@ -1,201 +1,78 @@
-# 🧪 Tests del Backend - Events API
+# 🧪 Pruebas del Backend con Pytest y Nox
 
-## 📋 Test Unificado Completo
+Este documento describe cómo ejecutar y gestionar la suite de pruebas para la API del backend.
 
-### **test_api.py** 
-**Test integral unificado que cubre toda la funcionalidad**
+## 🚀 Herramientas Utilizadas
 
-#### ✅ Tests de Infraestructura (1 test)
-- Verificación de servidor funcionando
+- **Pytest**: El framework principal para escribir y ejecutar las pruebas.
+- **Nox**: Una herramienta de automatización que gestiona entornos y comandos de prueba en un `noxfile.py`.
 
-#### ✅ Tests de Autenticación (7 tests)
-- Registro completo de usuario con todos los campos
-- Registro mínimo con campos requeridos
-- Validaciones de registro (email/username duplicado)
-- Inicio de sesión exitoso
-- Validación de credenciales inválidas
-- Obtener usuario actual con token
-- Validación de acceso no autorizado
+## ✅ Cobertura de las Pruebas
 
-#### ✅ Tests de Eventos (15 tests)
-- Creación de evento completo con todos los campos
-- Creación de evento mínimo
-- Evento con visibilidad 'only_me'
-- Validación de autorización en creación
-- Obtener todos los eventos públicos
-- Filtros y paginación
-- Obtener evento específico
-- Manejo de evento inexistente
-- Actualización por propietario
-- Validación de permisos en actualización
-- Obtener mis eventos
+La suite de pruebas está diseñada para cubrir todas las funcionalidades críticas de la API, incluyendo:
 
-#### ✅ Tests de Favoritos (5 tests)
-- Agregar evento a favoritos
-- Validación de favorito duplicado
-- Obtener mis favoritos
-- Quitar evento de favoritos
-- Manejo de favorito inexistente
+- **Autenticación**: Registro, inicio de sesión, validación de tokens y protección de rutas.
+- **CRUD de Eventos**: Creación, lectura, actualización y eliminación de eventos, incluyendo validaciones de permisos.
+- **Visibilidad de Eventos**: Pruebas para asegurar que los eventos `public`, `private` y `only_me` se muestren correctamente según el estado de autenticación del usuario.
+- **Favoritos**: Añadir, ver y eliminar eventos favoritos.
+- **Soft Deletes y Archiving**: Pruebas para el archivado y restauración de eventos.
+- **Búsqueda y Filtrado**: Verificación de que los filtros por texto, ciudad y categoría funcionen como se espera.
+- **Validación de Datos**: Pruebas para los campos requeridos y formatos de datos correctos.
 
-#### ✅ Tests de Soft Delete (8 tests)
-- Archivar evento
-- Eventos archivados ocultos en lista pública
-- Obtener eventos archivados
-- Restaurar evento archivado
-- Soft delete de evento
-- Obtener eventos eliminados
-- Validación de permisos en soft delete
-- Hard delete permanente
+El archivo principal de pruebas es `tests/test_api.py`, que contiene una suite de integración completa.
 
-#### ✅ Tests de Categorías (4 tests)
-- Crear categoría principal
-- Crear subcategoría
-- Obtener todas las categorías
-- Obtener categoría específica
+## 🚀 Cómo Ejecutar las Pruebas
 
-#### ✅ Tests de Búsqueda y Filtros (3 tests)
-- Búsqueda de eventos por texto
-- Filtrar eventos por ciudad
-- Filtrar eventos por categoría
+### Opción 1: Usando Nox (Recomendado)
 
-#### ✅ Tests de Permisos y Visibilidad (1 test)
-- Test completo de permisos de visibilidad
+Nox automatiza la creación del entorno y la ejecución de los comandos.
 
-#### ✅ Tests de Validación (1 test)
-- Validaciones de campos requeridos en eventos
+1.  **Abre una terminal** en la carpeta `backend`.
+2.  **Inicia el servidor de desarrollo** en esa terminal. Esto es crucial, ya que las pruebas de integración hacen peticiones HTTP reales a la API.
+    ```bash
+    nox -s start_server
+    ```
+3.  **Abre una segunda terminal** en la misma carpeta (`backend`).
+4.  **Ejecuta la suite de pruebas completa:**
+    ```bash
+    nox -s test_api
+    ```
+    Este comando le dirá a Nox que ejecute la sesión `test_api` definida en `noxfile.py`.
 
-#### 🧹 Test de Limpieza (1 test)
-- Resumen y limpieza final
+### Opción 2: Usando Pytest Directamente
 
-**Total: 45 tests completos**
+Si prefieres no usar Nox, puedes ejecutar Pytest directamente.
 
-## 📊 Resultado de Ejecución Actual
-- ✅ **5 tests pasaron** - Funcionalidades básicas funcionando
-- ❌ **37 tests fallaron** - Endpoints por implementar o servidor no disponible
-## 🚀 Ejecutar Tests con Nox
+1.  **Asegúrate de que el servidor esté corriendo** (`uv run flask --app app run --debug`).
+2.  **Asegúrate de tener las dependencias instaladas** (`uv sync`).
+3.  **Ejecuta Pytest:**
+    ```bash
+    uv run pytest -v
+    ```
+    El flag `-v` proporciona una salida más detallada.
 
-### Comandos principales:
+## 📂 Flujo de Trabajo para Desarrollo y Pruebas
 
-```bash
-# Listar todas las sesiones disponibles
-nox --list
+1.  **Desarrolla una nueva funcionalidad** en un endpoint (por ejemplo, en `routes/events.py`).
+2.  **Escribe una o más pruebas** para esa funcionalidad en `tests/test_api.py`. Intenta cubrir tanto los casos de éxito como los de error.
+3.  **Ejecuta las pruebas** usando `nox -s test_api` o `uv run pytest` para asegurarte de que tu nueva funcionalidad pasa las pruebas y no ha roto nada existente (regresiones).
+4.  **Repite** hasta que todas las pruebas pasen.
 
-# Configurar entorno de desarrollo
-nox -s dev_setup
+## 🧹 Otras Tareas con Nox
 
-# Test rápido de conectividad (requiere servidor)
-nox -s test_quick
+Nox también puede ayudarte con otras tareas de calidad de código:
 
-# Ejecutar todos los tests (requiere servidor en puerto 5000)
-nox -s test_all
+- **Linting**:
+  ```bash
+  nox -s lint
+  ```
+- **Formateo de código**:
+  ```bash
+  nox -s format
+  ```
+- **Limpieza de archivos temporales**:
+  ```bash
+  nox -s clean
+  ```
 
-# Ejecutar tests con output detallado
-nox -s test_api
-
-# Iniciar servidor Flask para testing (en terminal separada)
-nox -s start_server
-
-# Herramientas de desarrollo
-nox -s lint              # Linting del código
-nox -s format            # Formatear código automáticamente
-nox -s clean             # Limpiar archivos temporales (__pycache__, .pyc)
-```
-
-### Flujo recomendado:
-
-1. **Configurar entorno:**
-   ```bash
-   nox -s dev_setup
-   ```
-
-2. **Verificar conectividad básica:**
-   ```bash
-   # Terminal 1: Iniciar servidor
-   nox -s start_server
-   
-   # Terminal 2: Test rápido
-   nox -s test_quick
-   ```
-
-3. **Ejecutar tests completos:**
-   ```bash
-   # Con servidor corriendo en otra terminal
-   nox -s test_api
-   ```
-
-4. **Tests sin servidor (para desarrollo):**
-   ```bash
-   # Solo verifica sintaxis y estructura
-   python -m pytest tests/test_api.py --collect-only
-   ```
-
-## 📁 Archivos de Test
-
-```
-tests/
-└── test_api.py           # ✅ Test unificado completo (45 tests)
-```
-
-## 🗑️ Archivos consolidados:
-
-- ✅ **test_api.py** - Test unificado que incluye toda la funcionalidad
-- ❌ Tests anteriores consolidados en el archivo principal
-
-## 💡 Análisis de Fallos Actuales
-
-### Posibles causas de los 37 tests fallidos:
-
-1. **Servidor no corriendo** (más probable)
-   - El servidor Flask debe estar en `http://localhost:5000`
-   - Usar `nox -s start_server` en terminal separada
-
-2. **Endpoints no implementados**
-   - Algunos endpoints pueden no estar completamente desarrollados
-   - Verificar rutas en `routes/` directory
-
-3. **Base de datos no inicializada**
-   - Los archivos CSV pueden no existir
-   - El ORM puede necesitar inicialización
-
-4. **Dependencias faltantes**
-   - JWT, Flask-CORS, u otras librerías
-   - Ejecutar `nox -s dev_setup` para instalar
-
-### Debugging paso a paso:
-
-```bash
-# 1. Verificar servidor
-curl http://localhost:5000/docs
-
-# 2. Test individual más simple
-python -c "import requests; print(requests.get('http://localhost:5000/docs').json())"
-
-# 3. Test específico
-python -m pytest tests/test_api.py::test_01_server_status -v
-
-# 4. Ver detalles de fallos
-nox -s test_api | tee test_results.log
-```
-
-## 🔧 Configuración uv venv:
-
-Todos los comandos de nox usan `venv_backend="uv"` para aprovechamiento del entorno virtual de uv.
-
-## 📊 Estado del Proyecto:
-
-### ✅ Completado:
-- Test suite completa (45 tests)
-- Configuración nox 
-- Documentación de API
-- Estructura de tests unificada
-
-### 🔄 En proceso:
-- Implementación de endpoints faltantes
-- Corrección de fallos en tests
-- Optimización de la base de datos CSV
-
-### 🎯 Próximos pasos:
-1. Identificar qué 5 tests pasan para mantener esa funcionalidad
-2. Implementar endpoints faltantes uno por uno
-3. Ejecutar tests incrementalmente
-4. Documentar endpoints implementados vs pendientes
+Para ver todas las sesiones disponibles, ejecuta: `nox --list`.

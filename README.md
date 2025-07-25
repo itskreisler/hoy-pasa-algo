@@ -6,8 +6,10 @@
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
 
-**🚀 Plataforma web moderna para descubrir eventos locales en tu ciudad**
+**🚀 Plataforma web moderna para descubrir eventos locales en tu ciudad, con un backend potente en Python.**
 
 [📖 Ver Demo](#) • [🛠️ Instalación](#instalación) • [📋 Características](#características)
 
@@ -41,6 +43,7 @@
 | 📱 **Totalmente Responsiva** | Funciona perfectamente en cualquier dispositivo |
 | 🏷️ **Categorización Inteligente** | Encuentra exactamente lo que buscas |
 | ⚡ **Carga Ultrarrápida** | Powered by Astro para máximo rendimiento |
+| 🐍 **Backend Robusto** | API RESTful con Flask y Python |
 
 ---
 
@@ -79,52 +82,21 @@
 
 ### 💻 **Frontend**
 
-| Tecnología | Propósito | Versión |
-|---|---|---|
-| ![Astro](https://img.shields.io/badge/Astro-BC52EE?style=flat-square&logo=astro&logoColor=white) | **Astro** | Estructura general del sitio, SSR |
-| ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) | **React** | Componentes interactivos |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white) | **TailwindCSS** | Estilos rápidos y responsivos |
+| Tecnología | Propósito |
+|---|---|
+| ![Astro](https://img.shields.io/badge/Astro-BC52EE?style=flat-square&logo=astro&logoColor=white) | **Astro** - Estructura general del sitio, SSR |
+| ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) | **React** - Componentes interactivos |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white) | **TailwindCSS** - Estilos rápidos y responsivos |
+| ![Zustand](https://img.shields.io/badge/Zustand-000?style=flat-square) | **Zustand** - Gestión de estado global |
+| ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest) | **Vitest** - Pruebas unitarias y de integración |
 
-### 🔄 **Gestión de Estado**
+### 🌐 **Backend**
 
-- 🐻 **Zustand** - Estado global para filtros, favoritos, sesión de usuario
-
-### 🔗 **Backend (Futuro)**
-
-- 🔥 **Firebase** - Autenticación y base de datos
-- 🟢 **Node.js/Express** - API RESTful para eventos y usuarios
-
----
-
-## 🎨 **Diseño y UX**
-
-### 📐 **Mockups Creados en Figma**
-
-- 🏠 **Página de Inicio**
-  - Buscador inteligente
-  - Filtros por categoría y fecha
-  - Carrusel de eventos destacados
-
-- 🎫 **Tarjetas de Evento**
-  - Imagen principal
-  - Título y descripción
-  - Fecha, hora y ubicación
-  - Botones de acción
-
-- 👤 **Página de Perfil**
-  - Eventos favoritos
-  - Historial de asistencias
-  - Configuración de notificaciones
-
-- ➕ **Formulario de Creación**
-  - Campos intuitivos
-  - Validación en tiempo real
-  - Vista previa del evento
-
-- 📱 **Navegación Móvil**
-  - Menú inferior fijo
-  - Iconos intuitivos
-  - Transiciones suaves
+| Tecnología | Propósito |
+|---|---|
+| ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | **Python** - Lenguaje principal del backend |
+| ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white) | **Flask** - Framework para la API RESTful |
+| ![Pytest](https://img.shields.io/badge/Pytest-0A9B71?style=flat-square&logo=pytest) | **Pytest** - Pruebas para el backend |
 
 ---
 
@@ -132,36 +104,38 @@
 
 ```mermaid
 graph TD
-    A[🚀 Astro] --> B[⚛️ React Components]
-    A --> C[🎨 TailwindCSS]
-    B --> D[🐻 Zustand Store]
-    B --> E[🎫 EventoCard]
-    B --> F[🔍 FiltroCategorias]
-    B --> G[📅 FiltroFechas]
-    B --> H[🧭 Navbar]
-    B --> I[📱 BottomMenu]
+    subgraph Frontend
+        A[🚀 Astro] --> B[⚛️ React Components]
+        A --> C[🎨 TailwindCSS]
+        B --> D[🐻 Zustand Store]
+    end
+
+    subgraph Backend
+        E[🐍 Python] --> F[🔥 Flask API]
+        F --> G[📦 Endpoints]
+        F --> H[💾 Base de Datos CSV]
+    end
+
+    B --> F
 ```
 
-### 📂 **Estructura de Componentes**
+### 📂 **Estructura de Carpetas**
 
 ```
-src/
-├── 🏗️ layouts/
-│   └── Layout.astro
-├── 📄 pages/
-│   ├── index.astro
-│   ├── eventos/
-│   └── perfil/
-├── ⚛️ components/
-│   ├── EventoCard.jsx
-│   ├── FiltroCategorias.jsx
-│   ├── FiltroFechas.jsx
-│   ├── Navbar.jsx
-│   └── BottomMenu.jsx
-├── 🐻 store/
-│   └── useEventStore.js
-└── 🎨 styles/
-    └── global.css
+.
+├── backend/
+│   ├── app.py
+│   ├── routes/
+│   ├── models/
+│   ├── tests/
+│   └── ...
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── stores/
+│   └── ...
+├── README.md
+└── ...
 ```
 
 ---
@@ -175,111 +149,65 @@ src/
 | 🖼️ **Interfaz Responsiva** | ✅ Completado | Filtros visibles y funcionales desde el inicio |
 | 🎫 **Cards de Eventos** | ✅ Completado | Info rápida: imagen, hora, ubicación y favoritos |
 | ➕ **Sistema de Creación** | ✅ Completado | Formulario funcional con validación básica |
-| � **Menú de Navegación** | ✅ Completado | Menú inferior que guía la navegación del MVP |
-| � **Estado Global** | ✅ Completado | Zustand manteniendo filtros activos entre rutas |
-| 🎠 **Carrusel Infinito** | ✅ Completado | Showcase de eventos destacados |
-
-### 📊 **Métricas de Rendimiento**
-
-- ⚡ **Tiempo de carga**: < 2 segundos
-- 📱 **Responsive**: 100% compatible móvil/desktop
-- 🎯 **Lighthouse Score**: 95+
-- 🔍 **SEO**: Optimizado para motores de búsqueda
+| ↔️ **API Backend** | ✅ Completado | API RESTful con Python y Flask para gestionar eventos y usuarios |
+| 🧪 **Pruebas** | ✅ Completado | Pruebas unitarias y de integración para frontend y backend |
 
 ---
 
 ## 🚀 **Instalación**
 
-### 📋 **Prerequisites**
+### 📋 **Prerrequisitos**
 
 - Node.js >= 18.0.0
 - pnpm >= 8.0.0
+- Python >= 3.10
+- uv >= 0.1.15
 
-### ⚡ **Instalación Rápida**
+### ⚡ **Instalación y Ejecución**
 
-```bash
-# Clona el repositorio
-git clone https://github.com/tu-usuario/hoy-pasa-algo.git
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/tu-usuario/hoy-pasa-algo.git
+   cd hoy-pasa-algo
+   ```
 
-# Navega al directorio
-cd hoy-pasa-algo
+2. **Backend (Python):**
+   ```bash
+   cd backend
+   uv sync
+   uv run flask --app app run --debug
+   ```
+   La API estará disponible en `http://localhost:5000`.
 
-# Instala dependencias
-pnpm install
+3. **Frontend (Astro + React):**
+   En otra terminal:
+   ```bash
+   # Instala dependencias del frontend
+   pnpm install
 
-# Inicia el servidor de desarrollo
-pnpm dev
-```
+   # Inicia el servidor de desarrollo
+   pnpm dev
+   ```
+   El frontend estará disponible en `http://localhost:4321`.
 
 ### 🔧 **Scripts Disponibles**
 
 | Comando | Descripción |
 |---|---|
-| `pnpm dev` | 🚀 Servidor de desarrollo |
-| `pnpm build` | 📦 Build de producción |
-| `pnpm preview` | 👀 Preview del build |
-| `pnpm lint` | 🔍 Linter de código |
+| `pnpm dev` | 🚀 Servidor de desarrollo del frontend |
+| `pnpm build` | 📦 Build de producción del frontend |
+| `pnpm test` | 🧪 Ejecuta las pruebas del frontend con Vitest |
+| `cd backend && uv run pytest` | 🧪 Ejecuta las pruebas del backend con Pytest |
 
 ---
 
 ## 🔮 **Roadmap Futuro**
 
-### 🎯 **Versión 2.0**
-
-- [ ] 🔐 **Autenticación de usuarios**
-- [ ] 💾 **Base de datos persistente**
+- [ ] 🔐 **Autenticación de usuarios mejorada**
+- [ ] 💾 **Migrar a una base de datos SQL**
 - [ ] 🔔 **Notificaciones push**
 - [ ] 🗺️ **Integración con mapas**
 - [ ] 💬 **Sistema de comentarios**
-- [ ] ⭐ **Sistema de valoraciones**
-
-### 🎯 **Versión 3.0**
-
-- [ ] 📱 **App móvil nativa**
-- [ ] 🤖 **IA para recomendaciones**
-- [ ] 💳 **Sistema de pagos**
-- [ ] 📈 **Analytics avanzado**
-
----
-
-## 🎉 **Conclusiones**
-
-> **Hoy Pasa Algo** ha demostrado ser un MVP exitoso que resuelve efectivamente la **falta de visibilidad de eventos locales**.
-
-### 🏅 **Logros Alcanzados:**
-
-- ✅ **Stack Tecnológico Validado**: Astro + React + Zustand + Tailwind
-- ✅ **Rendimiento Excepcional**: Carga ultrarrápida y experiencia fluida
-- ✅ **Diseño Centrado en el Usuario**: Interfaz intuitiva y atractiva
-- ✅ **Escalabilidad Comprobada**: Arquitectura preparada para crecimiento
-- ✅ **MVP Funcional**: Todas las características core implementadas
-
-### 🎯 **Impacto del Proyecto:**
-
-| Beneficio | Para Usuarios | Para Negocios |
-|---|---|---|
-| 🔍 **Descubrimiento** | Encuentran eventos relevantes fácilmente | Mayor visibilidad y alcance |
-| ⏰ **Tiempo Real** | Información siempre actualizada | Comunicación directa con clientes |
-| 📱 **Accesibilidad** | Disponible 24/7 desde cualquier dispositivo | Herramienta gratuita de marketing |
-
----
-
-## 📚 **Recursos y Referencias**
-
-### 📖 **Documentación Oficial**
-
-| Tecnología | Link | Uso en el Proyecto |
-|---|---|---|
-| 🚀 **Astro** | [astro.build/docs](https://astro.build) | Framework principal |
-| ⚛️ **React** | [react.dev](https://react.dev) | Componentes interactivos |
-| 🎨 **TailwindCSS** | [tailwindcss.com](https://tailwindcss.com) | Sistema de diseño |
-| 🐻 **Zustand** | [zustand-demo.pmnd.rs](https://zustand-demo.pmnd.rs) | Gestión de estado |
-
-### 🎓 **Recursos de Aprendizaje**
-
-- 📹 **[Astro Crash Course](https://youtube.com)** - Tutorial completo
-- 📘 **[React Docs](https://react.dev/learn)** - Guía oficial
-- 🎨 **[Tailwind Play](https://play.tailwindcss.com)** - Playground online
 
 ---
 
@@ -288,8 +216,6 @@ pnpm dev
 ### 🤝 **¿Te gustó el proyecto?**
 
 [![⭐ Star en GitHub](https://img.shields.io/badge/⭐_Star_en_GitHub-black?style=for-the-badge&logo=github)](https://github.com/tu-usuario/hoy-pasa-algo)
-[![💬 Feedback](https://img.shields.io/badge/💬_Feedback-blue?style=for-the-badge)](mailto:tu-email@example.com)
-[![🚀 Demo Live](https://img.shields.io/badge/🚀_Demo_Live-green?style=for-the-badge)](https://hoy-pasa-algo.vercel.app)
 
 **¡Hecho con ❤️ para la comunidad local!**
 
